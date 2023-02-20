@@ -4,7 +4,19 @@
     "module": "commonJS",
     "target": "ES2021",
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "sourceMap":true,
+    "traceResolution": false,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "allowSyntheticDefaultImports":true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   }
 
 }
