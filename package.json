@@ -1,0 +1,7 @@
+{
+  "name": "clean-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jean Fraga <jeandevjs@gmail.com>",
+  "license": "MIT"
+}
