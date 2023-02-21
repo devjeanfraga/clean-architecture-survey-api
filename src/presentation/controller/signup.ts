@@ -1,4 +1,6 @@
-export class SignUpController {
+import {Controller} from '../protocols/protocol-controller';
+
+export class SignUpController implements Controller {
   handle(httpResquest: any): any {
     if (!httpResquest.name)
     return {
