@@ -37,7 +37,7 @@ const makeAddAccount = (): AddAccount => {
       return new Promise( (resolve, rejects) => resolve({
           id: "any-id",
           name: "any-name",
-          email: "any-email",
+          email: "any@email",
           password: "any-password"
         })
       );
@@ -141,5 +141,16 @@ describe( "SignUp Controller", () => {
 
     const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse).toEqual(serverError(new Error(null))); 
+  }); 
+
+  it("Should return 200 if add method by addAccount success", async () => {
+    const {sut} = makeSut();
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual(ok({
+      id: "any-id",
+      name: "any-name",
+      email: "any@email",
+      password: "any-password",
+    })); 
   }); 
 }); 
