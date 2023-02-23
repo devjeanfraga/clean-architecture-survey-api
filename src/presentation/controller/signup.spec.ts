@@ -2,21 +2,20 @@ import { SignUpController } from "./signup";
 import {HttpRequest, HttpResponse} from '../protocols/protocol-http';
 import {badRequest,serverError, ok} from '../http-helpers/http-helpers';
 import {MissingParamError} from '../errors/missing-param-error';
-
+import {InvalidParamError} from '../errors/invalid-param-error';
 
 interface AccountModel {
   id: string;
   name: string;
   email: string;
   password: string;
-} 
+}
 
 interface AddAccountModel {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
-} 
+}
 
 interface AddAccount {
   add (values: AddAccountModel):Promise<AccountModel>
@@ -120,6 +119,20 @@ describe( "SignUp Controller", () => {
     expect(httpResponse).toEqual(badRequest(new MissingParamError('confirmPassword'))); 
   }); 
 
+  it("Should return 400 if password is not equal confirmPassword", async () => {
+    const httpRequest: HttpRequest = {
+      body: {
+        name: 'any-name',
+        email: 'any@mail',
+        password: 'any-password',
+        confirmPassword:'diff-any-password'
+      }
+    };
+    const { sut } = makeSut();
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('confirmPassword'))); 
+  });
+
   it( "Shoud calls add method by AddAccount with correct values", async () => {
     const {sut, addAccountStub} = makeSut();
     const addSpy = jest.spyOn(addAccountStub, 'add'); 
@@ -129,7 +142,6 @@ describe( "SignUp Controller", () => {
       name: 'any-name',
       email: 'any@mail',
       password: 'any-password',
-      confirmPassword: 'any-password',
     }); 
   });
 
