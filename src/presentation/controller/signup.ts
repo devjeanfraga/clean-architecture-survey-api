@@ -1,3 +1,4 @@
+import { InvalidParamError } from '../errors/invalid-param-error';
 import { MissingParamError } from '../errors/missing-param-error';
 import { badRequest, ok, serverError } from '../http-helpers/http-helpers';
 import {Controller} from '../protocols/protocol-controller';
@@ -14,8 +15,7 @@ interface AddAccountModel {
   name: string;
   email: string;
   password: string;
-  confirmPassword: string;
-} 
+}
 
 interface AddAccount {
   add (values: AddAccountModel): Promise<AccountModel>
@@ -30,10 +30,13 @@ export class SignUpController implements Controller {
    
     try {
       for (const field of ["name", "email", "password", "confirmPassword"]) {
-        if( !httpResquest.body[field] ) return new Promise((resolve, reject) => resolve(badRequest(new MissingParamError(field))))
-      }  
-      const {name, email, password, confirmPassword} = httpResquest.body; 
-      const account = await this.addAccount.add({ name, email, password, confirmPassword }); 
+        if( !httpResquest.body[field] ) return badRequest(new MissingParamError(field));
+      } 
+      
+      if (httpResquest.body["password"] !== httpResquest.body["confirmPassword"]) return badRequest(new InvalidParamError("confirmPassword"))
+      
+      const {name, email, password} = httpResquest.body; 
+      const account = await this.addAccount.add({ name, email, password}); 
       return ok(account);
     } catch (err) {
       return serverError(err);
