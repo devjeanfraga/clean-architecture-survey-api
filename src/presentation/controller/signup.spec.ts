@@ -133,4 +133,13 @@ describe( "SignUp Controller", () => {
     }); 
   });
 
+  it("Should return 500 if add method by addAccount fails", async () => {
+    const {sut, addAccountStub} = makeSut();
+    jest.spyOn(addAccountStub, 'add').mockImplementationOnce( async () => {
+      return new Promise((resolve, reject) => reject(new Error()));
+    });
+
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual(serverError(new Error(null))); 
+  }); 
 }); 
