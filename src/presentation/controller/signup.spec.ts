@@ -18,8 +18,8 @@ const httpRequest: HttpRequest = {
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
-    isValid(email: string): boolean {
-      return true; 
+    isValid(email: string): Promise<boolean> {
+      return Promise.resolve(true); 
     }
   }
   return new EmailValidatorStub(); 
@@ -133,10 +133,30 @@ describe( "SignUp Controller", () => {
 
   it("Should return 400 if invalid email is provider", async () => {
       const {sut, emailValidatorStub} = makeSut();
-      jest.spyOn( emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+      jest.spyOn( emailValidatorStub, 'isValid').mockReturnValueOnce(Promise.resolve(false));
       
       const httpResponse = await sut.handle(httpRequest);
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('email'))); 
+  });  
+
+  it("Should calls isvalid method by Emailvalidator with correct values", async () => {
+    const {sut, emailValidatorStub} = makeSut();
+    const isValidSpy = jest.spyOn( emailValidatorStub, 'isValid')
+    
+    await sut.handle(httpRequest);
+    const { email } = httpRequest.body
+    expect(isValidSpy).toHaveBeenCalledWith(email); 
+  });
+
+  it("Should calls isvalid method by Emailvalidator with correct values", async () => {
+    const {sut, emailValidatorStub} = makeSut();
+    jest.spyOn( emailValidatorStub, 'isValid').mockImplementationOnce( async () => {
+      return new Promise((resolve, reject) => reject(new Error())); 
+    })
+    
+    const httpResponse = await sut.handle(httpRequest);
+    
+    expect(httpResponse).toEqual(serverError(new Error())); 
   });  
 
   it( "Shoud calls add method by AddAccount with correct values", async () => {
