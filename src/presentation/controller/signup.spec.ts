@@ -5,7 +5,7 @@ import {MissingParamError} from '../errors/missing-param-error';
 import {InvalidParamError} from '../errors/invalid-param-error';
 import { AddAccount, AddAccountModel } from '../../domain/usecase/add-account'; 
 import { AccountModel } from '../../domain/account-model';
-import { EmailValidator } from '../../utils/email-validator';
+import { EmailValidator } from '../protocols/email-validator';
 
 const httpRequest: HttpRequest = {
   body: {
