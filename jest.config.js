@@ -1,6 +1,18 @@
 
 
-export default {
+module.exports =  {
+  clearMocks: true,
+  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  coverageDirectory: "coverage",
+  coverageProvider: "v8",
+  roots: [
+    "<rootDir>/src"
+  ],
+  transform: {
+    '.*\\.ts$': 'ts-jest'
+  },
+  testEnvironment: "node",
+  
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -11,16 +23,13 @@ export default {
   // cacheDirectory: "C:\\Users\\Infinity\\AppData\\Local\\Temp\\jest",
 
   // Automatically clear mock calls, instances, contexts and results before every test
-  clearMocks: true,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  //collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -28,7 +37,6 @@ export default {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  coverageProvider: "v8",
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -121,9 +129,6 @@ export default {
   // rootDir: undefined,
 
   // A list of paths to directories that Jest should use to search for files in
-  roots: [
-    "<rootDir>/src"
-  ],
 
   // Allows you to use a custom runner instead of Jest's default test runner
   // runner: "jest-runner",
@@ -141,7 +146,7 @@ export default {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-node",
+
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -170,9 +175,7 @@ export default {
   // testRunner: "jest-circus/runner",
 
   // A map from regular expressions to paths to transformers
-  transform: {
-    '.*\\.ts$': 'ts-jest'
-  },
+
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: [
