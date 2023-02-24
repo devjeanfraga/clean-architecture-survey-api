@@ -18,8 +18,8 @@ const httpRequest: HttpRequest = {
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
-    isValid(email: string): Promise<boolean> {
-      return Promise.resolve(true); 
+    isValid(email: string): boolean {
+      return true; 
     }
   }
   return new EmailValidatorStub(); 
@@ -133,7 +133,7 @@ describe( "SignUp Controller", () => {
 
   it("Should return 400 if invalid email is provider", async () => {
       const {sut, emailValidatorStub} = makeSut();
-      jest.spyOn( emailValidatorStub, 'isValid').mockReturnValueOnce(Promise.resolve(false));
+      jest.spyOn( emailValidatorStub, 'isValid').mockReturnValueOnce(false);
       
       const httpResponse = await sut.handle(httpRequest);
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('email'))); 
@@ -150,8 +150,8 @@ describe( "SignUp Controller", () => {
 
   it("Should return 500 if isvalid method by Emailvalidator fails", async () => {
     const {sut, emailValidatorStub} = makeSut();
-    jest.spyOn( emailValidatorStub, 'isValid').mockImplementationOnce( async () => {
-      return new Promise((resolve, reject) => reject(new Error())); 
+    jest.spyOn( emailValidatorStub, 'isValid').mockImplementationOnce( () => {
+      throw new Error(); 
     }); 
     
     const httpResponse = await sut.handle(httpRequest);
