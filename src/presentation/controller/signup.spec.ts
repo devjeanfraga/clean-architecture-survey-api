@@ -139,7 +139,7 @@ describe( "SignUp Controller", () => {
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('email'))); 
   });  
 
-  it("Should calls isvalid method by Emailvalidator with correct values", async () => {
+  it("Should calls isvalid method by EmailValidator with correct values", async () => {
     const {sut, emailValidatorStub} = makeSut();
     const isValidSpy = jest.spyOn( emailValidatorStub, 'isValid')
     
@@ -148,14 +148,14 @@ describe( "SignUp Controller", () => {
     expect(isValidSpy).toHaveBeenCalledWith(email); 
   });
 
-  it("Should calls isvalid method by Emailvalidator with correct values", async () => {
+  it("Should return 500 if isvalid method by Emailvalidator fails", async () => {
     const {sut, emailValidatorStub} = makeSut();
     jest.spyOn( emailValidatorStub, 'isValid').mockImplementationOnce( async () => {
       return new Promise((resolve, reject) => reject(new Error())); 
-    })
+    }); 
     
     const httpResponse = await sut.handle(httpRequest);
-    
+    expect(httpResponse.statusCode).toBe(500); 
     expect(httpResponse).toEqual(serverError(new Error())); 
   });  
 
