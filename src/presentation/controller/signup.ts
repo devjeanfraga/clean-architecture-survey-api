@@ -3,24 +3,7 @@ import { MissingParamError } from '../errors/missing-param-error';
 import { badRequest, ok, serverError } from '../http-helpers/http-helpers';
 import {Controller} from '../protocols/protocol-controller';
 import { HttpRequest, HttpResponse } from '../protocols/protocol-http';
-
-interface AccountModel {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-} 
-
-interface AddAccountModel {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface AddAccount {
-  add (values: AddAccountModel): Promise<AccountModel>
-}
-
+import { AddAccount } from '../../domain/usecase/add-account'
 
 export class SignUpController implements Controller {
   
