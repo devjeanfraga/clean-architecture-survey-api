@@ -34,4 +34,13 @@ describe("DbAddAccount Usecase", () => {
     await sut.add(params); 
     expect(encryptSpy).toHaveBeenCalledWith(params.password);  
   });
+
+  it("Should throws if Encrypter throws", async () => {
+    const {sut, encrypterStub} = makeSut();
+    jest.spyOn(encrypterStub, "encrypt").mockImplementationOnce(()=> {
+      throw new Error();
+    });
+    const response = sut.add(params); 
+    await expect(response).rejects.toThrow();  
+  });
 });
