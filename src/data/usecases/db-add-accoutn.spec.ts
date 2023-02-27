@@ -70,4 +70,13 @@ describe("DbAddAccount Usecase", () => {
     });  
   });
 
+  it("Should throws if AddAccountRepository throws", async () => {
+    const {sut, addAccountRepositoryStub} = makeSut();
+    jest.spyOn(addAccountRepositoryStub, "add").mockImplementationOnce(()=> {
+      throw new Error();
+    });
+    const response = sut.add(params); 
+    await expect(response).rejects.toThrow();  
+  });
+
 });
