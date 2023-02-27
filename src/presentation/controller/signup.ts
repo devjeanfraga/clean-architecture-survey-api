@@ -3,7 +3,7 @@ import { MissingParamError } from '../errors/missing-param-error';
 import { badRequest, ok, serverError } from '../http-helpers/http-helpers';
 import {Controller} from '../protocols/protocol-controller';
 import { HttpRequest, HttpResponse } from '../protocols/protocol-http';
-import { AddAccount } from '../../domain/usecase/add-account';
+import { AddAccount } from '../../domain/usecases/add-account';
 import {EmailValidator} from '../protocols/email-validator'
 
 
