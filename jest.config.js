@@ -11,7 +11,8 @@ module.exports =  {
   transform: {
     '.*\\.ts$': 'ts-jest'
   },
-  testEnvironment: "node",
+  preset: '@shelf/jest-mongodb',
+  //testEnvironment: "node",
   
   // All imported modules in your tests should be mocked automatically
   // automock: false,
