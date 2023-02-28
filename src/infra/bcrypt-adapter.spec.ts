@@ -39,6 +39,12 @@ describe( "BcryptAdapter", () => {
      expect(hashSpy).toHaveBeenCalledWith("any-password", salt); 
   });
 
+  it ("Should return a hashed password if hash on success", async () => {
+    const {sut} = makeSut();
+    const response = await sut.hash("any-password");
+    expect(response).toBe("hashed-password"); 
+  });
+
   it("Should throws if hash method throws", async () => {
     const {sut} = makeSut();
     jest.spyOn(bcrypt, "hash").mockImplementationOnce(() => { throw new Error(); }); 
