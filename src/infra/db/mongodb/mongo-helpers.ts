@@ -1,16 +1,16 @@
-import { MongoClient, Collection } from "mongodb";
+import { MongoClient, Collection} from "mongodb";
 
 export const MongoHelper = {
   client: null as MongoClient,
   uri: null as string,
 
   async connect(uri: string): Promise<void> {
-    this.uri = uri;
+    this.uri = uri
     this.client = await MongoClient.connect(uri);
   },
 
   async disconnect (): Promise<void> {
-    await this.client.close();
+    await this.client.close()
     this.client = null;
   },
 
@@ -19,6 +19,7 @@ export const MongoHelper = {
   },
 
   map: (collection: any): any => {
+    console.log(collection)
     const { _id, ...data } = collection;
     return {id: _id, ...data}
   },
