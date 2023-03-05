@@ -19,7 +19,6 @@ export const MongoHelper = {
   },
 
   map: (collection: any): any => {
-    console.log(collection)
     const { _id, ...data } = collection;
     return {id: _id, ...data}
   },
