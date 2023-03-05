@@ -1,13 +1,12 @@
-import request from 'supertest';
-import app from '../config/app'; 
+import app from '../../../src/main/config/app'; 
 
-describe("Content-type", ()=> {
+describe("Content-type", () => {
   it("Should return default content-type json", async () => {
     app.get('/test-content-type-json', (req, res) => {
       res.send('');
     });
 
-    await request(app)
+    await global.testRequest
       .get('/test-content-type-json')
       .expect('content-type', /json/); 
   })

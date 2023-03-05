@@ -1,5 +1,4 @@
-import request from "supertest";
-import app from "../config/app";
+import app from '../../../src/main/config/app'; 
 
 describe("Cors Middlewares", () => {
   it("Should enable Cors ", async () => {
@@ -7,7 +6,7 @@ describe("Cors Middlewares", () => {
       res.send(); 
     });
 
-    await request(app)
+     await global.testRequest
       .post('/cors-test')
       .expect("access-control-allow-origin","*")
       .expect("access-control-allow-method", "*")
