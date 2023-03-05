@@ -1,19 +1,29 @@
-
+const { resolve } = require('path');
+const root = resolve(__dirname);
 
 module.exports =  {
+  rootDir: root,
   clearMocks: true,
-  collectCoverageFrom: ['<rootDir>/src/**/*.ts'],
+  collectCoverageFrom: [
+    '<rootDir>/src/**/*.ts', 
+    '!<rootDir>/src/main/**',
+    '!<rootDir>/src/domain/**',
+    '!<rootDir>/src/**/protocols/**'
+  ],
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   roots: [
-    "<rootDir>/src"
+    "<rootDir>/src",
+    "<rootDir>/tests"
   ],
   transform: {
     '.*\\.ts$': 'ts-jest'
   },
-  preset: '@shelf/jest-mongodb',
+  preset: '@shelf/jest-mongodb', 
+  setupFilesAfterEnv: [
+    "<rootDir>/jest-setup.ts"
+  ]
   //testEnvironment: "node",
-  
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 

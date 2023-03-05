@@ -6,5 +6,6 @@ module.exports = {
   rules: {
     "no-empty-function": "off",
     "@typescript-eslint/no-empty-function": "off",
+    "no-var": "off"
   }
 };
