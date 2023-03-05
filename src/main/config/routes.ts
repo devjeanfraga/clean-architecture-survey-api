@@ -6,9 +6,11 @@ export default (app:Express) : void => {
   app.use('/', router);
 
   readdirSync(`${__dirname}/../routes`).map(async file => {
-    const isFileTestOrBuild = file.includes('.test.') && file.includes('map');
+    const isFileTestOrBuild = file.includes('.test') || file.includes('.map');
     const fileRoutes  = (await import(`../routes/${file}`)).default;
     
-    if(!isFileTestOrBuild && fileRoutes) fileRoutes(router);
+    if(!isFileTestOrBuild && fileRoutes) {
+      fileRoutes(router);
+    }
   });
 };
