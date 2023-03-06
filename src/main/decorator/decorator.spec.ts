@@ -1,7 +1,7 @@
 import { serverError } from "../../presentation/http-helpers/http-helpers";
 import { Controller } from "../../presentation/protocols/protocol-controller"
 import { HttpRequest, HttpResponse } from "../../presentation/protocols/protocol-http"
-import { LogDecorator } from "./log-decorator";
+import { LogErrorDecorator } from "./log-decorator";
 
 const { fakeRequest, fakeResponse } = global;
 
@@ -15,20 +15,20 @@ const makeController = (): Controller => {
 };
 
 interface SutTypes {
-  sut: LogDecorator;
+  sut: LogErrorDecorator;
   controllerStub: Controller;
 }
 
 const  makeSut = (): SutTypes => {
   const controllerStub = makeController();
-  const sut = new LogDecorator(controllerStub);
+  const sut = new LogErrorDecorator(controllerStub);
   return {
     sut,
     controllerStub
   };
 };  
 
-describe("LogDecorator", () => {
+describe("LogErrorDecorator", () => {
   it("Should call handle method of controller", async () => {
     const {sut, controllerStub} = makeSut();
     const handleSpy = jest.spyOn(controllerStub, 'handle');
@@ -41,5 +41,5 @@ describe("LogDecorator", () => {
     const {sut} = makeSut();
     const res = await sut.handle(fakeRequest);
     expect(res).toEqual(fakeResponse)
-  })
+  });
 })
