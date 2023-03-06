@@ -18,7 +18,7 @@ const makeController = (): Controller => {
 
 const makeLogErrorRepository = (): LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {
-    logError(error: string): Promise<void> {
+    logError(stack: string): Promise<void> {
       return null;
     }
   }
