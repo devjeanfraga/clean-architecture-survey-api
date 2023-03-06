@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { Hasher } from '../data/protocols/hasher';
+import { Hasher } from '../../data/protocols/hasher';
 import { BcryptAdapter } from './bcrypt-adapter';
 
 jest.mock('bcrypt', () => ({
