@@ -15,7 +15,7 @@ export const makeRouteAdapter = (controller: Controller) => {
       res
         .status(httpResponse.statusCode)
         .json({ 
-          error: httpResponse.body.message
+          error: httpResponse.body.stack
         });
     }
   };
