@@ -31,6 +31,13 @@ describe('ValidationComposite', () => {
     expect(error).toEqual(new Error); 
   })
 
+  it('Should return the first Error if some Validation fails', () => {
+    const { sut, validations } = makeSut();
+    jest.spyOn(validations[1], 'validate').mockReturnValueOnce(new Error());
+    const error = sut.validate({field: 'any-field'}); 
+    expect(error).toEqual(new Error); 
+  });
+  
   it("Should return null if Validations success", async () => {
     const { sut } = makeSut();
     const res = sut.validate({field: 'field'}); 
