@@ -69,6 +69,15 @@ describe( "SignUpController", () => {
     expect(spyValidate).toHaveBeenCalledWith(httpRequest.body);
   });
 
+  it("should return some Error if Validation returns an Error", async () => {
+    const { sut, validationStub } = makeSut();
+    jest.spyOn( validationStub, 'validate').mockReturnValueOnce( 
+      new InvalidParamError('field')
+    );
+
+    const response = await sut.handle(httpRequest);
+    expect(response).toEqual(badRequest(new InvalidParamError('field')));
+  });
   
   it( "Shoud calls add method by AddAccount with correct values", async () => {
     const {sut, addAccountStub} = makeSut();
