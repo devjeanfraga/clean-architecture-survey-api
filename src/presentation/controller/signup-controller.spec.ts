@@ -1,4 +1,4 @@
-import { SignUpController } from "./signup";
+import { SignUpController } from "./signup-controller";
 import {HttpRequest} from '../protocols/protocol-http';
 import {badRequest,serverError, ok} from '../http-helpers/http-helpers';
 import {InvalidParamError} from '../errors/invalid-param-error';
