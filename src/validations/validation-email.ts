@@ -9,7 +9,10 @@ export class ValidationEmail implements Validation {
     ){}
 
   validate(input: any): InvalidParamError {
-    this.emailValidator.isValid(input[this.field]);
+    const isEmail = this.emailValidator.isValid(input[this.field]);
+    if ( !isEmail ) {
+      return new InvalidParamError(this.field);
+    }
     return null; 
   }
 }
