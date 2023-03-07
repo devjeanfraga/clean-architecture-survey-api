@@ -36,5 +36,10 @@ describe("ValidationEmail", () => {
     const error = sut.validate({email: 'any.mail.com'}); 
     expect(error).toEqual(new InvalidParamError('email'));
   });
-
+  
+  it("Should return null if Validation success", async () => {
+    const { sut } = makeSut();
+    const res = sut.validate({email: 'any@mail.com'}); 
+    expect(res).toBeFalsy(); 
+  });
 });
