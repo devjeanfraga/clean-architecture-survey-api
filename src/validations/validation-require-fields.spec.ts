@@ -13,5 +13,11 @@ describe("ValidationRequireFields", () => {
     const error = sut.validate({field: ''}); 
     expect(error).toEqual(new MissingParamError('field'));
   });
+  
+  it("Should return null if Validation success", async () => {
+    const { sut } = makeSut();
+    const res = sut.validate({field: 'field'}); 
+    expect(res).toBeFalsy(); 
+  })
 
 });
