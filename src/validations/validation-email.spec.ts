@@ -29,4 +29,12 @@ describe("ValidationEmail", () => {
     expect(spyIsValid).toHaveBeenCalledWith('any@mail.com'); 
   });
 
+  it("Should return MissingParamError if isValid method return false", async () => {
+    const { sut, emailValidatorStub } = makeSut();
+    jest.spyOn( emailValidatorStub, 'isValid' ).mockReturnValueOnce(false);
+
+    const error = sut.validate({email: 'any.mail.com'}); 
+    expect(error).toEqual(new InvalidParamError('email'));
+  });
+
 });
