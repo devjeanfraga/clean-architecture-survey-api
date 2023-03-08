@@ -128,4 +128,13 @@ describe('DbAuthentication Usecase', () => {
     const promise = await sut.auth(credentials);
     expect(promise).toBeNull();
   });
+
+  it('Should throws if encrypt Encrypter method throws', async () => {
+    const { sut, encrypterStub } = makeSut();
+    jest .spyOn(encrypterStub, 'encrypt').mockImplementationOnce(async ()=> {
+      throw new Error();
+    });
+    const promise = sut.auth(credentials);
+    await expect(promise).rejects.toThrow(); 
+  });
 });
