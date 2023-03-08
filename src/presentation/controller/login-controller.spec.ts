@@ -1,5 +1,7 @@
 import { Validation } from "../../validations/protocols/validation";
 import { LoginController } from "./login-controller";
+import { InvalidParamError } from "../errors/invalid-param-error";
+import { badRequest } from "../http-helpers/http-helpers";
 
 const httpRequest = {
   body: {
@@ -38,5 +40,16 @@ describe('LoginController', () => {
 
     await sut.handle(httpRequest);
     expect(spyValidate).toHaveBeenCalledWith(httpRequest.body);
+  });
+
+  
+  it("should return an Error if Validation returns some Error", async () => {
+    const { sut, validationStub } = makeSut();
+    jest.spyOn( validationStub, 'validate').mockReturnValueOnce( 
+      new InvalidParamError('field')
+    );
+
+    const response = await sut.handle(httpRequest);
+    expect(response).toEqual(badRequest(new InvalidParamError('field')));
   });
 }); 
