@@ -1,8 +1,9 @@
 import { Validation } from "../../validations/protocols/validation";
 import { LoginController } from "./login-controller";
 import { InvalidParamError } from "../errors/invalid-param-error";
-import { badRequest } from "../http-helpers/http-helpers";
+import { badRequest, serverError } from "../http-helpers/http-helpers";
 import { Authentication, AuthenticationModel } from "../../domain/usecases/authentication";
+
 
 const httpRequest = {
   body: {
@@ -73,5 +74,14 @@ describe('LoginController', () => {
     await sut.handle(httpRequest);
 
     expect(spyAuth).toHaveBeenCalledWith(httpRequest.body);
+  });
+
+  it("should return 500 if auth Authentication method fails", async () => {
+    const { sut, authenticationStub } = makeSut();
+    jest.spyOn( authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+
+    const res = await sut.handle(httpRequest);
+
+    expect(res).toEqual(serverError(new Error()));
   });
 }); 
