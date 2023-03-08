@@ -1,17 +1,30 @@
 import bcrypt from 'bcrypt';
 import { Hasher } from '../../data/protocols/hasher';
+import { HasherCompare } from '../../data/protocols/hasher-compare';
 import { BcryptAdapter } from './bcrypt-adapter';
 
 jest.mock('bcrypt', () => ({
   hash(): Promise<string> {
     return new Promise(resolve => resolve("hashed-password"));
+  },
+
+  compare(): Promise<boolean> {
+    return new Promise(resolve => resolve(true));
   }
 }));
 
 const makeHasher = (): Hasher => {
-  class HasherStub implements Hasher {
-    hash(value: string): Promise<string> { return Promise.resolve("hashed-password"); }
+  class HasherStub implements Hasher, HasherCompare {
+
+    hash(value: string): Promise<string> { 
+      return Promise.resolve("hashed-password"); 
+    }
+
+    compare(value: string, encrypted: string): Promise<boolean> {
+      return Promise.resolve(true);
+    }
   }
+
   return new HasherStub();
 };
 
@@ -34,9 +47,9 @@ describe( "BcryptAdapter", () => {
   it("Should calls hash method with correct values", () => {
      const {sut} = makeSut();
      const salt = 12;
-     const hashSpy = jest.spyOn(bcrypt, "hash"); 
+     const spyHash = jest.spyOn(bcrypt, "hash"); 
      sut.hash('any-password'); 
-     expect(hashSpy).toHaveBeenCalledWith("any-password", salt); 
+     expect(spyHash).toHaveBeenCalledWith("any-password", salt); 
   });
 
   it ("Should return a hashed password if hash on success", async () => {
@@ -51,5 +64,14 @@ describe( "BcryptAdapter", () => {
     const response = sut.hash('any-password'); 
     await expect(response).rejects.toThrow(); 
   });
+
+  it("Should calls compare method with correct values", () => {
+    const {sut} = makeSut();
+    const spyCompare = jest.spyOn(bcrypt, 'compare'); 
+    sut.compare('any-password', 'hashed-password'); 
+    expect(spyCompare).toHaveBeenCalledWith("any-password", "hashed-password"); 
+  });
+
+
  });
 
