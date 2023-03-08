@@ -89,4 +89,13 @@ describe('DbAuthentication Usecase', () => {
     const promise = await sut.auth(credentials);
     expect(promise).toBeNull();
   });
+
+  it('Should throws if compare HasherCompare method throws', async () => {
+    const { sut, hasherCompareStub } = makeSut();
+    jest .spyOn(hasherCompareStub, 'compare').mockImplementationOnce(async ()=> {
+      throw new Error();
+    });
+    const promise =  sut.auth(credentials);
+    await expect(promise).rejects.toThrow();
+  });
 });
