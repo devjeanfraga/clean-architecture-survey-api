@@ -119,4 +119,13 @@ describe('DbAuthentication Usecase', () => {
     await sut.auth(credentials);
     expect(spyEncrypt).toHaveBeenCalledWith(fakeAccount.id);
   });
+
+  it('Should return null if encrypt Encrypter method returns null', async () => {
+    const { sut, encrypterStub } = makeSut();
+    jest .spyOn(encrypterStub, 'encrypt').mockImplementationOnce(async ()=> {
+      return new Promise(resolve => resolve(null));
+    });
+    const promise = await sut.auth(credentials);
+    expect(promise).toBeNull();
+  });
 });
