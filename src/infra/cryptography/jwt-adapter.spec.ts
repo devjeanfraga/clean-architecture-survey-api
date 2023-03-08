@@ -18,8 +18,15 @@ describe('JwtAdapter', () => {
     const sut = makeSut(); 
     const spysign = jest.spyOn(jwt, 'sign');
  
-    sut.encrypt('any-string');
+    await sut.encrypt('any-string');
     expect(spysign).toHaveBeenCalledWith({value: 'any-string'}, secretKey);
+  });
+
+  it('should return a encrypted string if sign method on success', async () => {
+    const sut = makeSut(); 
+ 
+    const promise =  await sut.encrypt('any-string');
+    expect(promise).toEqual('any-encrypted-string');
   });
 
   it('should calls sign with correct values', async () => {
@@ -29,5 +36,5 @@ describe('JwtAdapter', () => {
      });
     const promise = sut.encrypt('any-string');
     await expect(promise).rejects.toThrow();
-  })
+  }); 
 });
