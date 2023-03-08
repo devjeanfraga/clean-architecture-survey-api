@@ -39,7 +39,7 @@ const  fakeAccount = {
   const makeEncrypterStub = (): Encrypter => {
     class EncrypterStub implements Encrypter {
       async encrypt(value: string): Promise<string> { 
-        return new Promise(resolve => resolve('access-token'))
+        return new Promise(resolve => resolve('any-access-token'))
       }
     }
     return new EncrypterStub();
@@ -160,7 +160,7 @@ describe('DbAuthentication Usecase', () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut();
     const spyEncrypt = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken'); 
     await sut.auth(credentials);
-    expect(spyEncrypt).toHaveBeenCalledWith(fakeAccount.id,'access-token');
+    expect(spyEncrypt).toHaveBeenCalledWith(fakeAccount.id,'any-access-token');
   });
 });
 
@@ -171,4 +171,10 @@ it('Should throw if updateAccessToken UpdateAccessTokenRepository method throws'
   }); 
   const promise = sut.auth(credentials);
   await expect(promise).rejects.toThrow();
+});
+
+it('Should return accessToken if auth on success', async () => {
+  const { sut } = makeSut();
+  const promise = await sut.auth(credentials);
+  expect(promise).toEqual('any-access-token');
 });
