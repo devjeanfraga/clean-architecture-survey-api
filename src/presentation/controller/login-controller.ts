@@ -1,6 +1,6 @@
 import { Authentication } from "../../domain/usecases/authentication";
 import { Validation } from "../../validations/protocols/validation";
-import { badRequest, serverError } from "../http-helpers/http-helpers";
+import { badRequest, ok, serverError } from "../http-helpers/http-helpers";
 import { Controller } from "../protocols/protocol-controller";
 import { HttpRequest, HttpResponse } from "../protocols/protocol-http";
 
@@ -14,9 +14,9 @@ export class LoginController implements Controller {
     try {
       const error = this.validation.validate(httpRequest.body);
       if ( error )  return badRequest(error);
-      await this.authentication.auth(httpRequest.body);
+      const accessToken = await this.authentication.auth(httpRequest.body);
 
-      return null; 
+      return ok({accessToken}); 
     } catch (error) {
       return serverError(error);
     }
