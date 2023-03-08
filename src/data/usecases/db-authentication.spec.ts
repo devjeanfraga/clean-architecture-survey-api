@@ -3,6 +3,7 @@ import { DbAuthentication } from "./db-authetication";
 import { LoadAccountByEmailRepository } from "../protocols/load-account-by-email-repository";
 import { HasherCompare } from "../protocols/hasher-compare";
 import { Encrypter } from "../protocols/encrypter";
+import { UpdateAccessTokenRepository } from "../protocols/update-access-token-repository";
 
 const credentials ={
     email: 'any@mail.com',
@@ -44,22 +45,39 @@ const  fakeAccount = {
     return new EncrypterStub();
   };
 
+  const makeUpdateAccesstokenRepository = (): UpdateAccessTokenRepository => {
+    class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
+      async updateAccessToken(id: string, accessToken: string ): Promise<void> {
+        return null; 
+      }
+    }
+    return new UpdateAccessTokenRepositoryStub();
+  };
+
  interface SutTypes {
   sut: DbAuthentication;
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
   hasherCompareStub: HasherCompare;
   encrypterStub: Encrypter;
+  updateAccessTokenRepositoryStub: UpdateAccessTokenRepository
  } 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository();
   const hasherCompareStub = makeHasherCompare();
   const encrypterStub = makeEncrypterStub();
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hasherCompareStub, encrypterStub);
+  const updateAccessTokenRepositoryStub = makeUpdateAccesstokenRepository(); 
+  const sut = new DbAuthentication(
+    loadAccountByEmailRepositoryStub, 
+    hasherCompareStub, 
+    encrypterStub, 
+    updateAccessTokenRepositoryStub
+  );
   return {
     sut,
     loadAccountByEmailRepositoryStub,
     hasherCompareStub,
-    encrypterStub
+    encrypterStub,
+    updateAccessTokenRepositoryStub
   }
 } 
 describe('DbAuthentication Usecase', () => {
@@ -136,5 +154,12 @@ describe('DbAuthentication Usecase', () => {
     });
     const promise = sut.auth(credentials);
     await expect(promise).rejects.toThrow(); 
+  });
+
+  it('Should call updateAccessToken UpdateAccessTokenRepository method with correct values', async () => {
+    const { sut, updateAccessTokenRepositoryStub } = makeSut();
+    const spyEncrypt = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken'); 
+    await sut.auth(credentials);
+    expect(spyEncrypt).toHaveBeenCalledWith(fakeAccount.id,'access-token');
   });
 });
