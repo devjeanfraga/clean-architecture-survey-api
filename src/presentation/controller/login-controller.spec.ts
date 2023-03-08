@@ -2,6 +2,7 @@ import { Validation } from "../../validations/protocols/validation";
 import { LoginController } from "./login-controller";
 import { InvalidParamError } from "../errors/invalid-param-error";
 import { badRequest } from "../http-helpers/http-helpers";
+import { Authentication, AuthenticationModel } from "../../domain/usecases/authentication";
 
 const httpRequest = {
   body: {
@@ -19,17 +20,29 @@ const makeValidation = (): Validation => {
   return new ValidationStub(); 
 };
 
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth(credentials: AuthenticationModel): Promise<string> {
+      return null; 
+    }
+  }
+  return new AuthenticationStub();
+}; 
+
 interface SutTypes {
   sut: LoginController;
   validationStub: Validation;
+  authenticationStub: Authentication;
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidation();
-  const sut = new LoginController(validationStub);
+  const authenticationStub = makeAuthentication();
+  const sut = new LoginController(validationStub, authenticationStub);
   return {
     sut,
-    validationStub
+    validationStub,
+    authenticationStub
   };
 };
 
@@ -51,5 +64,14 @@ describe('LoginController', () => {
 
     const response = await sut.handle(httpRequest);
     expect(response).toEqual(badRequest(new InvalidParamError('field')));
+  });
+
+  it("should call Authentication with correct values", async () => {
+    const { sut, authenticationStub } = makeSut();
+    const spyAuth = jest.spyOn( authenticationStub, 'auth');
+
+    await sut.handle(httpRequest);
+
+    expect(spyAuth).toHaveBeenCalledWith(httpRequest.body);
   });
 }); 
