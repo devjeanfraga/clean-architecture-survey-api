@@ -2,7 +2,7 @@ import { Collection } from "mongodb";
 import { MongoHelper } from "../mongo-helpers";
 import { AccountRepository } from "./account-repository";
 
-
+const sut = new AccountRepository();
 
 describe("AccountRepository", () => {
   let accountCollection: Collection;
@@ -18,14 +18,28 @@ describe("AccountRepository", () => {
   afterAll(async () =>{
     await MongoHelper.disconnect();
   });
-  it("Should return an account on add success", async () => {
-    const sut = new AccountRepository();
+  it("Should return an account by add on success", async () => {
     const accountData = {
       name: 'any-name',
       email:'any@mail.com',
       password: 'any-password'
     };
     const account = await sut.add(accountData);
+    expect(account).toBeTruthy();
+    expect(account.id).toBeTruthy();
+    expect(account.name).toBe('any-name');
+    expect(account.email).toBe('any@mail.com');
+    expect(account.password).toBe('any-password');
+  }); 
+
+  it("Should return an account by loadByEmail on success", async () => {
+    const accountData = {
+      name: 'any-name',
+      email:'any@mail.com',
+      password: 'any-password'
+    };
+    await sut.add(accountData);
+    const account = await sut.loadByEmail('any@mail.com');
     expect(account).toBeTruthy();
     expect(account.id).toBeTruthy();
     expect(account.name).toBe('any-name');
