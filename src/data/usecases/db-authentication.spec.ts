@@ -80,4 +80,13 @@ describe('DbAuthentication Usecase', () => {
     await sut.auth(credentials);
     expect(spyCompare).toHaveBeenCalledWith( credentials.password, fakeAccount.password );
   });
+
+  it('Should return null if compare HasherCompare method returns null', async () => {
+    const { sut, hasherCompareStub } = makeSut();
+    jest .spyOn(hasherCompareStub, 'compare').mockImplementationOnce(async ()=> {
+      return new Promise(resolve => resolve(null));
+    });
+    const promise = await sut.auth(credentials);
+    expect(promise).toBeNull();
+  });
 });
