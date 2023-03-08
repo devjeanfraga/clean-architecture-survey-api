@@ -45,6 +45,11 @@ describe( "BcryptAdapter", () => {
     expect(spyCompare).toHaveBeenCalledWith("any-password", "hashed-password"); 
   });
 
+  it ("Should return true if compare on success", async () => {
+    const sut = makeSut();
+    const response = await sut.compare('any-password', 'hashed-password');
+    expect(response).toBe(true); 
+  });
 
  });
 
