@@ -1,8 +1,9 @@
 import { AccountModel } from "../../domain/account-model";
 import { DbAuthentication } from "./db-authetication";
 import { LoadAccountByEmailRepository } from "../protocols/load-account-by-email-repository";
-import { HasherCompare
- } from "../protocols/hasher-compare";
+import { HasherCompare } from "../protocols/hasher-compare";
+import { Encrypter } from "../protocols/encrypter";
+
 const credentials ={
     email: 'any@mail.com',
     password: 'any-password'
@@ -27,25 +28,38 @@ const  fakeAccount = {
   const makeHasherCompare = (): HasherCompare => {
     class HasherCompareStub implements HasherCompare {
       compare(value:string, encrypted: string): Promise<boolean> {
-        return null;
+        return new Promise(resolve => resolve(true));
       }
     }
     return new HasherCompareStub();
+  };
+
+
+  const makeEncrypterStub = (): Encrypter => {
+    class EncrypterStub implements Encrypter {
+      async encrypt(value: string): Promise<string> { 
+        return new Promise(resolve => resolve('access-token'))
+      }
+    }
+    return new EncrypterStub();
   };
 
  interface SutTypes {
   sut: DbAuthentication;
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
   hasherCompareStub: HasherCompare;
+  encrypterStub: Encrypter;
  } 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository();
   const hasherCompareStub = makeHasherCompare();
-  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hasherCompareStub);
+  const encrypterStub = makeEncrypterStub();
+  const sut = new DbAuthentication(loadAccountByEmailRepositoryStub, hasherCompareStub, encrypterStub);
   return {
     sut,
     loadAccountByEmailRepositoryStub,
-    hasherCompareStub
+    hasherCompareStub,
+    encrypterStub
   }
 } 
 describe('DbAuthentication Usecase', () => {
@@ -97,5 +111,12 @@ describe('DbAuthentication Usecase', () => {
     });
     const promise =  sut.auth(credentials);
     await expect(promise).rejects.toThrow();
+  });
+
+  it('Should call encrypt Encrypter method with correct values if compare HasherCompare on success', async () => {
+    const { sut, encrypterStub } = makeSut();
+    const spyEncrypt = jest.spyOn(encrypterStub, 'encrypt'); 
+    await sut.auth(credentials);
+    expect(spyEncrypt).toHaveBeenCalledWith(fakeAccount.id);
   });
 });
