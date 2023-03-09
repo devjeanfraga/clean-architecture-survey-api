@@ -162,19 +162,22 @@ describe('DbAuthentication Usecase', () => {
     await sut.auth(credentials);
     expect(spyEncrypt).toHaveBeenCalledWith(fakeAccount.id,'any-access-token');
   });
+
+  it('Should throw if updateAccessToken UpdateAccessTokenRepository method throws', async () => {
+    const { sut, updateAccessTokenRepositoryStub } = makeSut();
+    jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockImplementationOnce(() => {
+      throw new Error(); 
+    }); 
+    const promise = sut.auth(credentials);
+    await expect(promise).rejects.toThrow();
+  });
+  
+  it('Should return accessToken if auth on success', async () => {
+    const { sut } = makeSut();
+    const promise = await sut.auth(credentials);
+    expect(promise).toEqual('any-access-token');
+  });
 });
 
-it('Should throw if updateAccessToken UpdateAccessTokenRepository method throws', async () => {
-  const { sut, updateAccessTokenRepositoryStub } = makeSut();
-  jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockImplementationOnce(() => {
-    throw new Error(); 
-  }); 
-  const promise = sut.auth(credentials);
-  await expect(promise).rejects.toThrow();
-});
 
-it('Should return accessToken if auth on success', async () => {
-  const { sut } = makeSut();
-  const promise = await sut.auth(credentials);
-  expect(promise).toEqual('any-access-token');
-});
+
