@@ -1,4 +1,5 @@
-import { MongoClient, Collection} from "mongodb";
+import { MongoClient, Collection, ObjectId} from "mongodb";
+
 
 export const MongoHelper = {
   client: null as MongoClient,
@@ -22,4 +23,8 @@ export const MongoHelper = {
     const { _id, ...data } = collection;
     return {id: _id, ...data}
   },
+
+  makeObjectId: (id: string ): ObjectId => {
+    return new ObjectId(id);
+  }
 };
