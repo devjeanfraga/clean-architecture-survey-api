@@ -5,7 +5,7 @@ import { ValidationEmail } from "../../validations/validation-email";
 import { ValidationRequireFields } from "../../validations/validation-require-fields.";
 import { ValidationsComposite } from "../../validations/validations-composite";
 
-export const makeLoginValidation = (): ValidationsComposite => {
+export const makeSignUpValidation = (): ValidationsComposite => {
   const validations: Validation[] = [];
   
   const fields = ['name', 'email', 'password', 'confirmPassword']
