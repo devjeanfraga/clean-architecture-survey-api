@@ -4,6 +4,7 @@ import { Collection } from "mongodb";
 
 describe('POST /login', () => {
   let collection: Collection;
+
   beforeAll(async () => {
     await MongoHelper.connect(global.__MONGO_URI__);
   });
@@ -16,6 +17,7 @@ describe('POST /login', () => {
   afterAll(async () => {
     await MongoHelper.disconnect();
   });
+
   it('Should return status code 200 if success', async () => {
     const password = await bcrypt.hash('123', 12); 
     const fakeAccount = {
@@ -25,7 +27,7 @@ describe('POST /login', () => {
     };
 
     collection =  MongoHelper.getCollection('accounts');
-    collection.insertOne(fakeAccount);
+    await collection.insertOne(fakeAccount);
 
     const response = await global.testRequest
       .post('/login')
