@@ -129,18 +129,7 @@ describe( "SignUpController", () => {
 
     const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse).toEqual(forbidden(new EmailInUseError())); 
-  }); 
-
-  it("Should return 200 if add method by addAccount success", async () => {
-    const {sut} = makeSut();
-    const httpResponse = await sut.handle(httpRequest);
-    expect(httpResponse).toEqual(ok({
-      id: "any-id",
-      name: "any-name",
-      email: "any@email",
-      password: "any-password",
-    })); 
-  }); 
+  });  
 
   it("should call Authentication with correct values", async () => {
     const { sut, authenticationStub } = makeSut();
@@ -158,5 +147,11 @@ describe( "SignUpController", () => {
     const res = await sut.handle(httpRequest);
 
     expect(res).toEqual(serverError(new Error()));
+  });
+
+  it('Should return a token if auth Authentication method on succes', async () => {
+    const { sut } = makeSut();
+    const res = await sut.handle(httpRequest);
+    expect(res).toEqual(ok({accessToken: 'any-token'}));
   });
 }); 
