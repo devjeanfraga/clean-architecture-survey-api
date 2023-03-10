@@ -1,6 +1,5 @@
-import {DbAddAccount } from "../usecases/db-add-acount";
-import { Hasher } from "../protocols/hasher";
-import { AddAccountRepository } from "../protocols/add-account-repository";
+import {DbAddAccount } from "./db-add-acount";
+import { Hasher, AddAccountRepository} from "./db-add-account-protocols";
 import { AccountModel } from "../../domain/account-model";
 import { AddAccountModel } from "../../domain/usecases/add-account";
 
