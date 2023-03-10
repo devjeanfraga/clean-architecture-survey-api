@@ -1,10 +1,10 @@
 import { SignUpController } from "./signup-controller";
-import {HttpRequest} from '../protocols/protocol-http';
-import {badRequest,serverError, ok} from '../http-helpers/http-helpers';
-import {InvalidParamError} from '../errors/invalid-param-error';
-import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'; 
-import { AccountModel } from '../../domain/account-model';
-import { Validation } from "../../validations/protocols/validation";
+import {HttpRequest} from '../../protocols/protocol-http';
+import {badRequest,serverError, ok} from '../../http-helpers/http-helpers';
+import {InvalidParamError} from '../../errors/invalid-param-error';
+import { AddAccount, AddAccountModel } from '../../../domain/usecases/add-account'; 
+import { AccountModel } from '../../../domain/account-model';
+import { Validation } from "../../../validations/protocols/validation";
 
 jest.mock('../../validations/validations-composite.ts'); 
 
