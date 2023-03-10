@@ -6,7 +6,9 @@ import {
   AddAccount, 
   badRequest, 
   ok, 
-  serverError
+  serverError,
+  forbidden,
+  EmailInUseError
 } from './signup-controller-protocols';
 
 export class SignUpController implements Controller {
@@ -23,7 +25,10 @@ export class SignUpController implements Controller {
 
       const {name, email, password} = httpResquest.body; 
       const account = await this.addAccount.add({ name, email, password});
+      if (!account) return forbidden(new EmailInUseError());
 
+      
+ 
       return ok(account);
     } catch (err) {
       return serverError(err);
