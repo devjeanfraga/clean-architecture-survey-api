@@ -1,7 +1,23 @@
 import {DbAddAccount } from "./db-add-acount";
-import { Hasher, AddAccountRepository} from "./db-add-account-protocols";
+import { Hasher, AddAccountRepository, LoadAccountByEmailRepository} from "./db-add-account-protocols";
 import { AccountModel } from "../../domain/account-model";
 import { AddAccountModel } from "../../domain/usecases/add-account";
+
+const  fakeAccount = {
+  id: 'any-id',
+  name: 'any-name',
+  email: 'any@mail.com',
+  password:'any-hashed-password'
+}
+
+const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
+  class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
+    async loadByEmail(email: string): Promise<AccountModel> {
+      return new Promise(resolve => resolve(fakeAccount));
+    }
+  }
+  return new LoadAccountByEmailRepositoryStub();
+};
 
 const makeHasher = (): Hasher => {
   class HasherStub implements Hasher {
@@ -30,16 +46,19 @@ interface SutTypes {
   sut: DbAddAccount;
   hasherStub: Hasher;
   addAccountRepositoryStub: AddAccountRepository;
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 
 const makeSut = (): SutTypes => {
+  const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository();
   const hasherStub = makeHasher();
   const addAccountRepositoryStub = makeAddAccountRepository(); 
-  const sut = new DbAddAccount(hasherStub, addAccountRepositoryStub);
+  const sut = new DbAddAccount(loadAccountByEmailRepositoryStub, hasherStub, addAccountRepositoryStub);
   return {
     sut,
     hasherStub,
-    addAccountRepositoryStub
+    addAccountRepositoryStub,
+    loadAccountByEmailRepositoryStub
   };
 };
 
@@ -50,6 +69,13 @@ const params = {
 };
 
 describe("DbAddAccount Usecase", () => {
+  it('Should call loadByEmail LoadAccountByEmailRepository method with correct email', async () => {
+    const { sut, loadAccountByEmailRepositoryStub } = makeSut();
+    const spyLoadByEmail = jest .spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail');
+    await sut.add(params);
+    expect(spyLoadByEmail).toHaveBeenCalledWith(params.email);
+  });
+
   it("Should calls encrypt by Encrypter with correct password ", async () => {
     const {sut, hasherStub} = makeSut();
     const encryptSpy = jest.spyOn(hasherStub, "hash");
