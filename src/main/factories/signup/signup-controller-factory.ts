@@ -6,9 +6,10 @@ import { SignUpController } from "../../../presentation/controller/signup-contro
 import { Controller } from "../../../presentation/protocols/protocol-controller";
 import { LogErrorDecorator } from "../../decorator/log-error-decorator";
 import { makeSignUpValidation } from "./signup-validation-factory";
+import env from "../../config/env";
 
 export const makeSignUpController = (): Controller => {  
-  const salt = 12;
+  const salt = env.salt;
   const bcryptAdapter = new BcryptAdapter(salt);
   const accountRepository = new AccountRepository();
 

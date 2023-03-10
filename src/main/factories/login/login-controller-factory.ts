@@ -7,11 +7,12 @@ import { LoginController } from "../../../presentation/controller/login-controll
 import { Controller } from "../../../presentation/protocols";
 import { LogErrorDecorator } from "../../decorator/log-error-decorator";
 import { makeLoginValidation } from "./login-validation-factory";
+import env from "../../config/env";
 
 export const makeLoginController = (): Controller => {
-  const secretKey = 'Some-Key';
+  const secretKey = env.secretKey;
+  const salt = env.salt; 
   const jwtAdapter = new JwtAdapter(secretKey);
-  const salt = 12; 
   const bcryptAdapter = new BcryptAdapter(salt)
   const accountRepository = new AccountRepository();
   const dbAuthentication = new DbAuthentication(accountRepository, bcryptAdapter, jwtAdapter, accountRepository);
