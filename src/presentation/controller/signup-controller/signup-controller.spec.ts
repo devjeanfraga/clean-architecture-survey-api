@@ -11,7 +11,7 @@ import {
   serverError
 } from './signup-controller-protocols';
 
-jest.mock('../../validations/validations-composite.ts'); 
+jest.mock('../../../validations/validations-composite.ts'); 
 
 const httpRequest: HttpRequest = {
   body: {
