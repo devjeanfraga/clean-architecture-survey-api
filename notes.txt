@@ -1,0 +1,2 @@
+use crypto to create a hash
+node -e "console.log(require('crypto').randomBytes(256).toString('base64'))"
