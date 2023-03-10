@@ -1,0 +1,32 @@
+import { MongoHelper } from "../../../src/infra/db/mongodb/mongo-helpers";
+import bcrypt from 'bcrypt';
+import { Collection } from "mongodb";
+
+describe('POST /login', () => {
+  let collection: Collection;
+  beforeAll(async () => {
+    await MongoHelper.connect(global.__MONGO_URI__);
+  });
+  afterAll(async () => {
+    await MongoHelper.disconnect();
+  });
+  it('Should return accessToken', async () => {
+    const password = await bcrypt.hash('123', 12); 
+    const fakeAccount = {
+      name: 'any-name',
+      email: 'any@mail.com',
+      password
+    };
+
+    collection =  MongoHelper.getCollection('accounts');
+    collection.insertOne(fakeAccount);
+
+    const response = await global.testRequest
+      .post('/login')
+      .send({
+        email: 'any@mail.com',
+        password: '123'
+      });
+    expect(response.statusCode).toBe(200)
+  });
+})
