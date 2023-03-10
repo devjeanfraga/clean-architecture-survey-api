@@ -1,5 +1,5 @@
 import { SignUpController } from "./signup-controller";
-import { InvalidParamError } from '../../errors';
+import { InvalidParamError, EmailInUseError } from '../../errors';
 import { AddAccountModel } from '../../../domain/usecases/add-account'; 
 import { AccountModel } from '../../../domain/account-model';
 import {
@@ -8,7 +8,8 @@ import {
   AddAccount, 
   badRequest, 
   ok, 
-  serverError
+  serverError,
+  forbidden
 } from './signup-controller-protocols';
 
 jest.mock('../../../validations/validations-composite.ts'); 
@@ -104,6 +105,14 @@ describe( "SignUpController", () => {
 
     const httpResponse = await sut.handle(httpRequest);
     expect(httpResponse).toEqual(serverError(new Error(null))); 
+  }); 
+
+  it("Should return 403 if add method by addAccount returns null", async () => {
+    const {sut, addAccountStub} = makeSut();
+    jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(Promise.resolve(null));
+
+    const httpResponse = await sut.handle(httpRequest);
+    expect(httpResponse).toEqual(forbidden(new EmailInUseError())); 
   }); 
 
   it("Should return 200 if add method by addAccount success", async () => {
