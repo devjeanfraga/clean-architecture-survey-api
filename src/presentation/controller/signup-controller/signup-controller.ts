@@ -1,9 +1,13 @@
-import { badRequest, ok, serverError } from '../http-helpers/http-helpers';
-import {Controller} from '../protocols/protocol-controller';
-import { HttpRequest, HttpResponse } from '../protocols/protocol-http';
-import { AddAccount } from '../../domain/usecases/add-account';
-import { Validation } from '../../validations/protocols/validation';
-
+import {
+  Controller, 
+  HttpRequest, 
+  HttpResponse, 
+  Validation, 
+  AddAccount, 
+  badRequest, 
+  ok, 
+  serverError
+} from './signup-controller-protocols';
 
 export class SignUpController implements Controller {
   
