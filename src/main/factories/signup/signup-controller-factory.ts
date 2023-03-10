@@ -7,6 +7,7 @@ import { Controller } from "../../../presentation/protocols/protocol-controller"
 import { LogErrorDecorator } from "../../decorator/log-error-decorator";
 import { makeSignUpValidation } from "./signup-validation-factory";
 import env from "../../config/env";
+import { makeSignUpAuthentication } from "./signup-authentication-factory";
 
 export const makeSignUpController = (): Controller => {  
   const salt = env.salt;
@@ -14,7 +15,7 @@ export const makeSignUpController = (): Controller => {
   const accountRepository = new AccountRepository();
 
   const dbAddAccount = new DbAddAccount(accountRepository, bcryptAdapter,accountRepository);
-  const signupController = new SignUpController( makeSignUpValidation(), dbAddAccount);
+  const signupController = new SignUpController( makeSignUpValidation(), dbAddAccount, makeSignUpAuthentication());
 
   const logMongoRespository = new LogMongoRepository();
   return  new LogErrorDecorator(signupController, logMongoRespository); 

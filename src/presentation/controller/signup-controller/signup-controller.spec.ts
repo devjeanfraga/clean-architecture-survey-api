@@ -1,7 +1,6 @@
 import { SignUpController } from "./signup-controller";
-import { InvalidParamError, EmailInUseError } from '../../errors';
-import { AddAccountModel } from '../../../domain/usecases/add-account'; 
 import { AccountModel } from '../../../domain/account-model';
+import { InvalidParamError } from '../../errors';
 import {
   HttpRequest, 
   Validation, 
@@ -9,7 +8,11 @@ import {
   badRequest, 
   ok, 
   serverError,
-  forbidden
+  forbidden,
+  Authentication, 
+  AuthenticationModel,
+  EmailInUseError,
+  AddAccountModel
 } from './signup-controller-protocols';
 
 jest.mock('../../../validations/validations-composite.ts'); 
@@ -48,20 +51,33 @@ const makeAddAccount = (): AddAccount => {
   return new AddAccountStub(); 
 }; 
 
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth(credentials: AuthenticationModel): Promise<string> {
+      
+      return  new Promise(resolve => resolve('any-token')); 
+    }
+  }
+  return new AuthenticationStub();
+}; 
+
 interface SutTypes {
   sut: SignUpController; 
   validationStub: Validation;
   addAccountStub: AddAccount;
+  authenticationStub: Authentication
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidation();
   const addAccountStub = makeAddAccount();
-  const sut = new SignUpController(validationStub , addAccountStub);
+  const authenticationStub = makeAuthentication();
+  const sut = new SignUpController(validationStub , addAccountStub, authenticationStub);
   return {
     sut,
     validationStub,
-    addAccountStub 
+    addAccountStub,
+    authenticationStub 
   };
 }
   
@@ -125,4 +141,13 @@ describe( "SignUpController", () => {
       password: "any-password",
     })); 
   }); 
+
+  it("should call Authentication with correct values", async () => {
+    const { sut, authenticationStub } = makeSut();
+    const spyAuth = jest.spyOn( authenticationStub, 'auth');
+
+    await sut.handle(httpRequest);
+    const { email, password } = httpRequest.body;
+    expect(spyAuth).toHaveBeenCalledWith({email, password});
+  });
 }); 
