@@ -3,7 +3,8 @@ import {
   HttpRequest, 
   HttpResponse, 
   Validation, 
-  AddAccount, 
+  AddAccount,
+  Authentication, 
   badRequest, 
   ok, 
   serverError,
@@ -15,7 +16,8 @@ export class SignUpController implements Controller {
   
   constructor (
     private readonly validations: Validation,
-    private readonly addAccount: AddAccount
+    private readonly addAccount: AddAccount,
+    private readonly authentication: Authentication
   ) {}
 
   async handle(httpResquest: HttpRequest): Promise<HttpResponse> {
@@ -27,8 +29,8 @@ export class SignUpController implements Controller {
       const account = await this.addAccount.add({ name, email, password});
       if (!account) return forbidden(new EmailInUseError());
 
+      await this.authentication.auth({email, password});
       
- 
       return ok(account);
     } catch (err) {
       return serverError(err);
