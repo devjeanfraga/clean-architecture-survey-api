@@ -9,8 +9,8 @@ export const makeRouteAdapter = (controller: Controller) => {
     };
 
     const httpResponse: HttpResponse = await controller.handle(httpRequest);
-    
-    if( httpResponse.statusCode == 200 ) res.status(httpResponse.statusCode).json(httpResponse.body);
+    const { statusCode } = httpResponse;
+    if( statusCode >= 200 && statusCode <= 299 ) res.status(httpResponse.statusCode).json(httpResponse.body);
     else {
       res
         .status(httpResponse.statusCode)
