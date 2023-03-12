@@ -11,7 +11,7 @@ describe('POST /signup', () => {
   });
   it("should return an account", async () => {
     const response = await global.testRequest
-      .post('/signup')
+      .post('/clean-api/signup')
       .send({
         name: 'any-name',
         email: 'any@mail.com',

@@ -1,7 +1,7 @@
-import {DbAddAccount } from "./db-add-acount";
-import { Hasher, AddAccountRepository, LoadAccountByEmailRepository} from "./db-add-account-protocols";
 import { AccountModel } from "../../domain/account-model";
 import { AddAccountModel } from "../../domain/usecases/add-account";
+import { DbAddAccount } from "./db-add-acount";
+import { Hasher, AddAccountRepository, LoadAccountByEmailRepository} from "./db-add-account-protocols";
 
 const  fakeAccount = {
   id: 'any-id',

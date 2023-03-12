@@ -3,7 +3,7 @@ import { readdirSync } from 'fs';
 
 export default (app:Express) : void => {
   const router = Router();
-  app.use('/', router);
+  app.use('/clean-api', router);
 
   readdirSync(`${__dirname}/../routes`).map(async file => {
     const isFileTestOrBuild = file.includes('.test') || file.includes('.map');

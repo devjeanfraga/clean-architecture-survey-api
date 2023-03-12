@@ -30,7 +30,7 @@ describe('POST /login', () => {
     await collection.insertOne(fakeAccount);
 
     const response = await global.testRequest
-      .post('/login')
+      .post('/clean-api/login')
       .send({
         email: 'any@mail.com',
         password: '123'
@@ -40,7 +40,7 @@ describe('POST /login', () => {
 
   it('Should return status code 401 if email not exists', async () => {
     const response = await global.testRequest
-      .post('/login')
+      .post('/clean-api/login')
       .send({
         email: 'any@mail.com',
         password: '123'
