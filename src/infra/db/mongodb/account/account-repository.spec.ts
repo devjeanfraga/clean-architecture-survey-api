@@ -103,4 +103,10 @@ describe("AccountRepository", () => {
     const account = await sut.loadByToken( token, role );
     expect(account).toBeFalsy();
   }); 
+
+  it('Should return null if loadByToken fails', async () => {
+    const token = 'any-token'
+    const account = await sut.loadByToken(token)
+    expect(account).toBeFalsy()
+  })
 });
