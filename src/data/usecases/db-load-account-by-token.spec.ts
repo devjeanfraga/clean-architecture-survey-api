@@ -2,7 +2,7 @@ import { DbLoadAccountByToken } from "./db-load-account-by-token";
 import { AccountModel, Decrypter, LoadAccountByTokenRepository } from "./db-load-account-by-token-protocols";
 
 
-const token = 'any-token', rule = 'any-role'
+const token = 'any-token', role = 'any-role'
 const fakeAccount = {
   id: 'any-id',
   name: 'any-name',
@@ -65,7 +65,7 @@ describe('DbLoadAccountByToken', () => {
     const { sut, loaAccountByTokenRepositoryStub } = makeSut();
     const spyLoadByToken = jest.spyOn(loaAccountByTokenRepositoryStub, 'loadByToken');
 
-    await sut.loadByToken(token, rule);
-    expect(spyLoadByToken).toHaveBeenCalledWith('any-string', rule);
+    await sut.loadByToken(token, role);
+    expect(spyLoadByToken).toHaveBeenCalledWith('any-string', role);
   })
 });
