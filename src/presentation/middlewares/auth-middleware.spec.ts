@@ -1,4 +1,4 @@
-import { Validation } from "./auth-middleware-protocols";
+import { Validation, badRequest, AccessDeniedError} from "./auth-middleware-protocols";
 import { AuthMiddleware } from "./auth-middleware";
 
 const fakeRequest = {
@@ -36,5 +36,13 @@ describe('AuthMiddleware', () => {
 
     await sut.handle(fakeRequest);
     expect(spyValidate).toHaveBeenCalledWith(fakeRequest.headers?.["x-access-token"]);
+  });
+
+  it("should return 403 if  Validation returns an Error", async () => {
+    const { sut, validationStub } = makeSut();
+    jest.spyOn( validationStub, 'validate').mockReturnValueOnce(new AccessDeniedError());
+
+    const response = await sut.handle(fakeRequest);
+    expect(response).toEqual(badRequest(new AccessDeniedError()));
   });
 });
