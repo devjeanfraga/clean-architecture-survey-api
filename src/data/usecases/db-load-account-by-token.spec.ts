@@ -45,7 +45,7 @@ const makeSut = (): SutTypes => {
 };
 
 describe('DbLoadAccountByToken', () => {
-  it('Should call loadByToken LoaAccountByTokenRepository method with correct values', async () => {
+  it('Should call decipher Decrypter method with correct values', async () => {
     const { sut, decrypterStub } = makeSut();
     const spyDecipher = jest.spyOn(decrypterStub, 'decipher');
 
@@ -53,7 +53,7 @@ describe('DbLoadAccountByToken', () => {
     expect(spyDecipher).toHaveBeenLastCalledWith(token); 
   });
 
-  it('Should return null if loadByToken LoaAccountByTokenRepository method returns null', async () => {
+  it('Should return null if decipher Decrypter method returns null', async () => {
     const { sut, decrypterStub } = makeSut();
     jest.spyOn(decrypterStub, 'decipher').mockReturnValueOnce(Promise.resolve(null));
 
@@ -86,4 +86,14 @@ describe('DbLoadAccountByToken', () => {
     const promise = sut.loadByToken(token, role);
     await expect(promise).rejects.toThrow();
   })
+
+  it('Should throw if decipher Decrypter method throws', async () => {
+    const { sut, decrypterStub } = makeSut();
+    jest.spyOn(decrypterStub, 'decipher').mockImplementationOnce(()=> {
+      throw new Error();
+    });
+
+    const promise = await sut.loadByToken(token, role);
+    expect(promise).rejects.toThrow(); 
+  });
 });
