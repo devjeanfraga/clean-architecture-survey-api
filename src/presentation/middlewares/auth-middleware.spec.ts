@@ -1,4 +1,4 @@
-import { Validation, badRequest, AccessDeniedError, AccountModel, LoadAcccountByToken, serverError} from "./auth-middleware-protocols";
+import { Validation, badRequest, AccessDeniedError, AccountModel, LoadAcccountByToken, serverError, ok} from "./auth-middleware-protocols";
 import { AuthMiddleware } from "./auth-middleware";
 
 const fakeRequest = {
@@ -6,6 +6,13 @@ const fakeRequest = {
     'x-access-token': 'any-token'
   }
 };
+
+const fakeAccount = {
+  id: 'any-id',
+  name: 'any-name',
+  email: 'any-mail',
+  password: 'any-password'
+}
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -19,12 +26,7 @@ const makeValidation = (): Validation => {
 const makeLoadAcccountByToken = (): LoadAcccountByToken => {
   class LoadAcccountByTokenStub implements LoadAcccountByToken {
     loadByToken(token: string, rule?: string): Promise<AccountModel> {
-      return new Promise(resolve => resolve({
-        id: 'any-id',
-        name: 'any-name',
-        email: 'any-mail',
-        password: 'any-password'
-      })); 
+      return new Promise(resolve => resolve(fakeAccount)); 
     }
   }
   return new LoadAcccountByTokenStub();
@@ -90,5 +92,11 @@ describe('AuthMiddleware', () => {
 
     const response = await sut.handle(fakeRequest);
     expect(response).toEqual(serverError(new Error()))
+  });
+
+  it("should return 200 if  loadByToken LoadAcccountByToken on success", async () => {
+    const { sut } = makeSut();
+    const response = await sut.handle(fakeRequest);
+    expect(response).toEqual(ok({id: fakeAccount.id}))
   });
 });
