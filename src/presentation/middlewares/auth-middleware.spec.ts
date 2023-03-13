@@ -71,4 +71,14 @@ describe('AuthMiddleware', () => {
       await sut.handle(fakeRequest);
       expect(spyLoadByToken).toHaveBeenCalledWith(fakeRequest.headers?.["x-access-token"], role);
   });
+
+  it("should return 403 if  loadByToken LoadAcccountByToken returns null", async () => {
+    const { sut, loadAcccountByTokenStub } = makeSut();
+    jest.spyOn( loadAcccountByTokenStub, 'loadByToken').mockImplementationOnce(async () => {
+      return new Promise((resolve, rejects ) => resolve(null))
+    });
+
+    const response = await sut.handle(fakeRequest);
+    expect(response).toEqual(badRequest(new AccessDeniedError()));
+  });
 });
