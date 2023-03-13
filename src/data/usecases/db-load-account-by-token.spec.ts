@@ -66,7 +66,7 @@ describe('DbLoadAccountByToken', () => {
     const spyLoadByToken = jest.spyOn(loaAccountByTokenRepositoryStub, 'loadByToken');
 
     await sut.loadByToken(token, role);
-    expect(spyLoadByToken).toHaveBeenCalledWith('any-string', role);
+    expect(spyLoadByToken).toHaveBeenCalledWith(token, role);
   });
 
   it('Should return null if loadByToken LoaAccountByTokenRepository method returns null', async () => {
@@ -93,7 +93,7 @@ describe('DbLoadAccountByToken', () => {
       throw new Error();
     });
 
-    const promise = await sut.loadByToken(token, role);
-    expect(promise).rejects.toThrow(); 
+    const promise = sut.loadByToken(token, role);
+    await expect(promise).rejects.toThrow(); 
   });
 });
