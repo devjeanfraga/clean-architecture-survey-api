@@ -3,7 +3,8 @@ import { AccessDeniedError, badRequest, HttpRequest, HttpResponse, LoadAcccountB
 export class AuthMiddleware implements Middleware {
   constructor (
     private readonly validation: Validation,
-    private readonly loadAccountByToken: LoadAcccountByToken
+    private readonly loadAccountByToken: LoadAcccountByToken,
+    private readonly role: string
   ){}
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -11,7 +12,7 @@ export class AuthMiddleware implements Middleware {
     if (error) return badRequest(new AccessDeniedError());
 
     const token = httpRequest.headers?.['x-access-token']
-    await this.loadAccountByToken.loadByToken(token);
+    await this.loadAccountByToken.loadByToken(token, this.role);
     return null; 
   }
 }
