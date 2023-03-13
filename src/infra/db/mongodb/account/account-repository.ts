@@ -4,8 +4,14 @@ import { AccountModel } from "../../../../domain/account-model";
 import { MongoHelper } from "../mongo-helpers";
 import { LoadAccountByEmailRepository } from "../../../../data/protocols/db/db-account/load-account-by-email-repository";
 import { UpdateAccessTokenRepository } from "../../../../data/protocols/db/db-account/update-access-token-repository";
+import { LoadAccountByTokenRepository } from "../../../../data/usecases/db-load-account-by-token-protocols";
 
-export class AccountRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
+export class AccountRepository implements 
+  AddAccountRepository, 
+  LoadAccountByEmailRepository, 
+  UpdateAccessTokenRepository,
+  LoadAccountByTokenRepository
+  {
 
   async add(values: AddAccountModel): Promise<AccountModel> {
     const collection =  MongoHelper.getCollection('accounts');
@@ -27,5 +33,19 @@ export class AccountRepository implements AddAccountRepository, LoadAccountByEma
       {_id: makeObjectId(id) },  
       { $set: { accessToken: accessToken } }
     );
-  } 
+  }
+  
+  async loadByToken(token: string, role?: string): Promise<AccountModel> {
+    const collection = MongoHelper.getCollection('accounts');
+    const account = await collection.findOne(
+      {
+        accessToken: token,
+        $or: [
+          { role: 'admin' }, 
+          { role: role }
+        ]
+      }
+    );
+    return account &&  MongoHelper.map(account); 
+  }
 } 
