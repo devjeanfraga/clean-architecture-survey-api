@@ -85,5 +85,22 @@ describe("AccountRepository", () => {
     const account = await sut.loadByToken( token, role );
     expect(account).toBeTruthy();
     expect(account.id).toBeTruthy();
+  });   
+  
+  it('Should return null if invalid role', async () => {
+    const token = 'any-token', role = 'any-role';
+    const accountData = {
+      name: 'any-name',
+      email:'any@mail.com',
+      password: 'any-password',
+    };
+
+    const { insertedId } = await accountCollection.insertOne(accountData);
+    const { _id } = await accountCollection.findOne({_id: insertedId});
+    const id = _id.toHexString();
+    await sut.updateAccessToken( id, token);
+
+    const account = await sut.loadByToken( token, role );
+    expect(account).toBeFalsy();
   }); 
 });
