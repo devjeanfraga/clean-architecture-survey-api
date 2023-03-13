@@ -25,7 +25,7 @@ const makeValidation = (): Validation => {
 
 const makeLoadAcccountByToken = (): LoadAcccountByToken => {
   class LoadAcccountByTokenStub implements LoadAcccountByToken {
-    loadByToken(token: string, rule?: string): Promise<AccountModel> {
+    loadByToken(accessToken: string, rule?: string): Promise<AccountModel> {
       return new Promise(resolve => resolve(fakeAccount)); 
     }
   }
