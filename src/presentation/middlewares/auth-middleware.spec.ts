@@ -55,7 +55,7 @@ describe('AuthMiddleware', () => {
     const spyValidate = jest.spyOn( validationStub, 'validate');
 
     await sut.handle(fakeRequest);
-    expect(spyValidate).toHaveBeenCalledWith(fakeRequest.headers?.["x-access-token"]);
+    expect(spyValidate).toHaveBeenCalledWith(fakeRequest.headers);
   });
 
   it("should return 403 if  Validation returns an Error", async () => {

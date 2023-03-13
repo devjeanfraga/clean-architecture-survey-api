@@ -9,7 +9,7 @@ export class AuthMiddleware implements Middleware {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const error = this.validation.validate(httpRequest.headers?.['x-access-token']) 
+      const error = this.validation.validate(httpRequest.headers) 
       if (error) return badRequest(new AccessDeniedError());
   
       const token = httpRequest.headers?.['x-access-token']
