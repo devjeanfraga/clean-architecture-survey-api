@@ -1,3 +1,4 @@
+import { resolve } from "path";
 import { DbLoadAccountByToken } from "./db-load-account-by-token";
 import { Decrypter } from "./db-load-account-by-token-protocols";
 
@@ -12,7 +13,7 @@ const fakeAccount = {
 const makeDecrypter = (): Decrypter => {
   class DecrypterStub implements Decrypter {
     decipher(value: string): Promise<string> {
-      return null; 
+      return new Promise(resolve => resolve('any-string')); 
     }
   }
   return new DecrypterStub();
@@ -38,5 +39,13 @@ describe('DbLoadAccountByToken', () => {
 
     await sut.loadByToken(token);
     expect(spyDecipher).toHaveBeenLastCalledWith(token); 
+  });
+
+  it('Should return null if loadByToken LoaAccountByTokenRepository method returns null', async () => {
+    const { sut, decrypterStub } = makeSut();
+    jest.spyOn(decrypterStub, 'decipher').mockReturnValueOnce(Promise.resolve(null));
+
+    const promise = await sut.loadByToken(token);
+    expect(promise).toBeNull(); 
   })
 });
