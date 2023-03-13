@@ -1,4 +1,4 @@
-import { Validation, badRequest, AccessDeniedError, AccountModel, LoadAcccountByToken} from "./auth-middleware-protocols";
+import { Validation, badRequest, AccessDeniedError, AccountModel, LoadAcccountByToken, serverError} from "./auth-middleware-protocols";
 import { AuthMiddleware } from "./auth-middleware";
 
 const fakeRequest = {
@@ -80,5 +80,15 @@ describe('AuthMiddleware', () => {
 
     const response = await sut.handle(fakeRequest);
     expect(response).toEqual(badRequest(new AccessDeniedError()));
+  });
+
+  it("should return 500 if  loadByToken LoadAcccountByToken throws", async () => {
+    const { sut, loadAcccountByTokenStub } = makeSut();
+    jest.spyOn( loadAcccountByTokenStub, 'loadByToken').mockImplementationOnce(async () => {
+      throw new Error(); 
+    });
+
+    const response = await sut.handle(fakeRequest);
+    expect(response).toEqual(serverError(new Error()))
   });
 });
