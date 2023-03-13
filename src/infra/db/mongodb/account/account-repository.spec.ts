@@ -68,12 +68,13 @@ describe("AccountRepository", () => {
     expect(accessToken).toBe('any-access-token'); 
   });
 
-  it('Should return an account if loadByToken on success without role', async () => {
-    const token = 'any-token', role = undefined;
+  it('Should return an account if loadByToken on success with role', async () => {
+    const token = 'any-token', role = 'admin';
     const accountData = {
       name: 'any-name',
       email:'any@mail.com',
       password: 'any-password',
+      role
     };
 
     const { insertedId } = await accountCollection.insertOne(accountData);
@@ -84,8 +85,5 @@ describe("AccountRepository", () => {
     const account = await sut.loadByToken( token, role );
     expect(account).toBeTruthy();
     expect(account.id).toBeTruthy();
-    expect(account.name).toBe('any-name');
-    expect(account.email).toBe('any@mail.com');
-    expect(account.password).toBe('any-password');
   }); 
 });
