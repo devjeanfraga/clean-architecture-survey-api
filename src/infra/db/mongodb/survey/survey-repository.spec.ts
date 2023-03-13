@@ -9,7 +9,7 @@ const dataSurvey = {
     { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
     { answer: 'any-answer-03'}
   ],
-  date: 'any-date'
+  date: new Date()
 };
 
 const sut = new SurveyRepository();

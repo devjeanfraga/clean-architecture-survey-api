@@ -8,7 +8,7 @@ const httpRequest = {
       { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
-    ] 
+    ],
   }
 };
 
@@ -69,7 +69,9 @@ describe('AddSurveyController', () => {
     const spyAdd = jest.spyOn( addSurveyStub, 'add');
 
     await sut.handle(httpRequest);
-    expect(spyAdd).toHaveBeenCalledWith(httpRequest.body);
+    const date = new Date();
+    const {question, answers } = httpRequest.body
+    expect(spyAdd).toHaveBeenCalledWith({question, answers, date});
   });
 
   it('Should returns 500 if AddSurvey throws', async () => {

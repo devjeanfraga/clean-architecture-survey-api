@@ -13,7 +13,7 @@ export class AddSurveyController implements Controller {
       if(error) return badRequest(error); 
       
       const {question, answers } = httpRequest.body
-      const date = new Date().toDateString();
+      const date = new Date()
 
       await this.addSurvey.add({question, answers, date});
       return noContent();
