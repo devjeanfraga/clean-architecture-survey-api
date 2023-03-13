@@ -38,7 +38,8 @@ interface SutTypes {
 const makeSut = (): SutTypes => {
   const validationStub = makeValidation();
   const loadAcccountByTokenStub = makeLoadAcccountByToken();
-  const sut = new AuthMiddleware(validationStub, loadAcccountByTokenStub);
+  const role = 'any-role';
+  const sut = new AuthMiddleware(validationStub, loadAcccountByTokenStub, role);
   return {
     sut,
     validationStub,
@@ -66,8 +67,8 @@ describe('AuthMiddleware', () => {
   it('Should calls loadByToken LoadAcccountByToken with correct values', async () => {
       const { sut, loadAcccountByTokenStub } = makeSut();
       const spyLoadByToken = jest.spyOn( loadAcccountByTokenStub, 'loadByToken');
-  
+      const role = 'any-role';
       await sut.handle(fakeRequest);
-      expect(spyLoadByToken).toHaveBeenCalledWith(fakeRequest.headers?.["x-access-token"]);
+      expect(spyLoadByToken).toHaveBeenCalledWith(fakeRequest.headers?.["x-access-token"], role);
   });
 });
