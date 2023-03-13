@@ -5,8 +5,9 @@ export class DbLoadAccountByToken implements LoadAcccountByToken {
     private readonly decrypter: Decrypter
   ){}
 
-  async loadByToken(token: string, rule?: string): Promise<AccountModel> {
-    this.decrypter.decipher(token)
+  async loadByToken(accessToken: string, rule?: string): Promise<AccountModel> {
+    const token:string = await this.decrypter.decipher(accessToken);
+    if(!token) return null; 
     return null; 
   }
 }
