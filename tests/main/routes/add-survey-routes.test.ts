@@ -57,4 +57,22 @@ describe('POST /add-survey', () => {
       .send(fakeSurvey);
     expect(response.statusCode).toBe(403)
   });
+
+  it('Should return status code 204 if on success', async () => {
+    const accessToken = await mockAccessToken();
+    const fakeSurvey = {
+      question: 'any-question',
+      answers:  [
+        { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
+        { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
+        { answer: 'any-answer-03'}
+      ],
+    };
+
+    const response = await global.testRequest
+      .post('/clean-api/add-survey')
+      .set('x-access-token', accessToken)
+      .send(fakeSurvey);
+    expect(response.statusCode).toBe(204)
+  });
 })
