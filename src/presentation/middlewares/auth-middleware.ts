@@ -1,4 +1,4 @@
-import { AccessDeniedError, badRequest, HttpRequest, HttpResponse, LoadAcccountByToken, Middleware, ok, serverError, Validation } from "./auth-middleware-protocols";
+import { AccessDeniedError, badRequest, forbidden, HttpRequest, HttpResponse, LoadAcccountByToken, Middleware, ok, serverError, Validation } from "./auth-middleware-protocols";
 
 export class AuthMiddleware implements Middleware {
   constructor (
@@ -10,7 +10,7 @@ export class AuthMiddleware implements Middleware {
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const error = this.validation.validate(httpRequest.headers) 
-      if (error) return badRequest(new AccessDeniedError());
+      if (error) return forbidden(new AccessDeniedError());
   
       const token = httpRequest.headers?.['x-access-token']
       
