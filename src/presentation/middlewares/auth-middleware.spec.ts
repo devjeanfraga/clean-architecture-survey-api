@@ -82,7 +82,8 @@ describe('AuthMiddleware', () => {
     });
 
     const response = await sut.handle(fakeRequest);
-    expect(response).toEqual(badRequest(new AccessDeniedError()));
+    expect(response.statusCode).toBe(403);
+    expect(response).toEqual(forbidden(new AccessDeniedError()));
   });
 
   it("should return 500 if  loadByToken LoadAcccountByToken throws", async () => {
