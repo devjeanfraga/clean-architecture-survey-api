@@ -1,4 +1,4 @@
-import { Controller, HttpRequest, HttpResponse, LoadSurveys } from "./load-surveys-controller-protocols";
+import { Controller, HttpRequest, HttpResponse, LoadSurveys, serverError } from "./load-surveys-controller-protocols";
 
 export class LoadSurveysController implements Controller {
   constructor(
@@ -6,7 +6,12 @@ export class LoadSurveysController implements Controller {
   ) {}
 
   async handle(httpRequest: HttpRequest = {}): Promise<HttpResponse> {
-    await this.loadSurveys.load(); 
-    return null; 
+    try {
+
+      await this.loadSurveys.load(); 
+      return null; 
+    } catch (error) {
+      return serverError(error)
+    }
   }
 }
