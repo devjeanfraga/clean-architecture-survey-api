@@ -1,5 +1,5 @@
 import { LoadSurveysController } from "./load-survey-controller";
-import { LoadSurveys, SurveyModel } from "./load-surveys-controller-protocols";
+import { LoadSurveys, SurveyModel, serverError } from "./load-surveys-controller-protocols";
 
 const makeLoadSurveys = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
@@ -24,10 +24,18 @@ const makeSut = (): SutTypes => {
 };
 
 describe('LoadSurveysContrller', () => {
-  it('should call load LoadSurveys', async () => {
+  it('should call load LoadSurveys method', async () => {
     const { sut, loadSurveysStub } = makeSut();
     const spyLoad = jest.spyOn(loadSurveysStub, 'load');
     await sut.handle();
     expect(spyLoad).toHaveBeenCalled(); 
-  })
+  }); 
+
+  it('Should return 500 if load LoadSurveys  fails', async () => {
+    const { sut, loadSurveysStub } = makeSut();
+    jest.spyOn(loadSurveysStub, 'load').mockImplementationOnce(() => {throw new Error()});
+    const response = await sut.handle();
+    expect(response.statusCode).toBe(500);
+    expect(response).toEqual(serverError(new Error())); 
+  }); 
 }); 
