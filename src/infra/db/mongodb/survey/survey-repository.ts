@@ -17,6 +17,6 @@ export class SurveyRepository implements AddSurveyRepository, LoadSurveysReposit
     const surveysList= await collection.find().toArray();
 
     for (const survey of surveysList) res.push(MongoHelper.map(survey)); 
-    return res.length > 0 ? res : null; 
+    return res;
   }
 }
