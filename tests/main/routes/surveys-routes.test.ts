@@ -6,12 +6,12 @@ import env from "../../../src/main/config/env";
 let surveysCollection: Collection;
 let accountsCollection: Collection;
 
-const mockAccessToken = async (): Promise<string> => {
+const mockAccessToken = async (email:string, role?: string): Promise<string> => {
   const result = await accountsCollection.insertOne({
     name: 'Jean',
-    email: 'jean@mail.com',
+    email,
     password: '123',
-    role: 'admin' 
+    role
   });
 
   const id = result.insertedId.toHexString();
@@ -24,7 +24,7 @@ const mockAccessToken = async (): Promise<string> => {
   return accessToken;
 };
 
-describe('POST /add-survey', () => {
+describe('POST-GET /surveys', () => {
 
   beforeAll(async () => {
     await MongoHelper.connect(global.__MONGO_URI__);
@@ -53,13 +53,13 @@ describe('POST /add-survey', () => {
     };
 
     const response = await global.testRequest
-      .post('/clean-api/add-survey')
+      .post('/clean-api/surveys')
       .send(fakeSurvey);
     expect(response.statusCode).toBe(403)
   });
 
   it('Should return status code 204 if on success', async () => {
-    const accessToken = await mockAccessToken();
+    const accessToken = await mockAccessToken('any@mail.com', 'admin');
     const fakeSurvey = {
       question: 'any-question',
       answers:  [
@@ -70,9 +70,44 @@ describe('POST /add-survey', () => {
     };
 
     const response = await global.testRequest
-      .post('/clean-api/add-survey')
+      .post('/clean-api/surveys')
       .set('x-access-token', accessToken)
       .send(fakeSurvey);
     expect(response.statusCode).toBe(204)
+  });
+
+  it('Should return status code 200 if on success', async () => {
+    const accessToken = await mockAccessToken('any.another@mail.com'); 
+    const fakeSurveys = [
+      {
+        question: 'any-question',
+        answers:  [
+          { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
+          { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
+          { answer: 'any-answer-03'}
+        ],
+      }, 
+      {
+        question: 'any-question',
+        answers:  [
+          { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
+          { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
+          { answer: 'any-answer-03'}
+        ],
+      },
+      {
+        question: 'any-question',
+        answers:  [
+          { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
+          { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
+          { answer: 'any-answer-03'}
+        ],
+      }
+    ];
+    await surveysCollection.insertMany(fakeSurveys); 
+    const response = await global.testRequest
+      .get('/clean-api/surveys')
+      .set('x-access-token', accessToken)
+      expect(response.statusCode).toBe(200)
   });
 })
