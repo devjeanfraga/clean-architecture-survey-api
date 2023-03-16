@@ -60,4 +60,10 @@ describe('DbLoadSurveys', () => {
     const response = sut.load();
     await expect(response).rejects.toThrow();
   });
+
+  it('Should return surveys if loadSurveys LoadSurveysRepository method on success', async () => {
+    const { sut } = makeSut();
+    const response = await sut.load();
+    expect(response).toEqual(listSurveys); 
+  }); 
 })
