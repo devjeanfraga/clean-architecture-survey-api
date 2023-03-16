@@ -1,10 +1,34 @@
 import { LoadSurveysController } from "./load-survey-controller";
-import { LoadSurveys, SurveyModel, serverError } from "./load-surveys-controller-protocols";
+import { LoadSurveys, SurveyModel, serverError, ok } from "./load-surveys-controller-protocols";
+
+
+const listSurveys: SurveyModel[] = [
+  {
+    id: 'any-id',
+    question: 'any-question',
+    answers: [
+      { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
+      { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
+      { answer: 'any-answer-03'}
+    ],
+    date: new Date(),
+  },
+  {
+    id: 'any-id',
+    question: 'any-question',
+    answers: [
+      { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
+      { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
+      { answer: 'any-answer-03'}
+    ],
+    date: new Date(),
+  }
+]
 
 const makeLoadSurveys = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
     async load(): Promise<SurveyModel[]> {
-      return null;
+      return new Promise(resolve => resolve(listSurveys));
     }
   }
   return new LoadSurveysStub(); 
@@ -37,5 +61,12 @@ describe('LoadSurveysContrller', () => {
     const response = await sut.handle();
     expect(response.statusCode).toBe(500);
     expect(response).toEqual(serverError(new Error())); 
+  }); 
+
+  it('Should return 200 if load LoadSurveys on success', async () => {
+    const { sut } = makeSut();
+    const response = await sut.handle();
+    expect(response.statusCode).toBe(200);
+    expect(response).toEqual(ok(listSurveys)); 
   }); 
 }); 
