@@ -52,5 +52,12 @@ describe('DbLoadSurveys', () => {
     const spyLoadSurbeys = jest.spyOn(loadSurveysRepositoryStub, 'loadSurveys');
     await sut.load();
     expect(spyLoadSurbeys).toHaveBeenCalled();
-  })
+  });
+
+  it('Should throws if loadSurveys LoadSurveysRepository fails', async () => {
+    const { sut, loadSurveysRepositoryStub } = makeSut();
+    jest.spyOn(loadSurveysRepositoryStub, 'loadSurveys').mockImplementationOnce(() => {throw new Error()});
+    const response = sut.load();
+    await expect(response).rejects.toThrow();
+  });
 })
