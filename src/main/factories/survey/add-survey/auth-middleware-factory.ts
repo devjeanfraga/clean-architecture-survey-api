@@ -1,4 +1,4 @@
-import { DbLoadAccountByToken } from "../../../../data/usecases/db-load-account-by-token";
+import { DbLoadAccountByToken } from "../../../../data/usecases/db-load-account-by-token/db-load-account-by-token";
 import { JwtAdapter } from "../../../../infra/cryptography/jwt-adapter";
 import { AccountRepository } from "../../../../infra/db/mongodb/account/account-repository";
 import { AuthMiddleware } from "../../../../presentation/middlewares/auth-middleware";

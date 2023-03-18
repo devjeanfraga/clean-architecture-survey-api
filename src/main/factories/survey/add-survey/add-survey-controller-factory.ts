@@ -4,7 +4,7 @@ import { LogErrorDecorator } from "../../../decorator/log-error-decorator";
 import { LogMongoRepository } from "../../../../infra/db/mongodb/logs/log-mongo-repository";
 import { makeAddSurveyValidation } from "./add-survey-validation-factory";
 import { SurveyRepository } from "../../../../infra/db/mongodb/survey/survey-repository";
-import { DbAddSurvey } from "../../../../data/usecases/db-add-survey";
+import { DbAddSurvey } from "../../../../data/usecases/db-add-survey/db-add-survey";
 
 export const makeAddSurveyController = (): Controller => {
   const surveyRepository = new SurveyRepository();

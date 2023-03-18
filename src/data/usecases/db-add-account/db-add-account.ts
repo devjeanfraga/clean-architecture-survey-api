@@ -1,5 +1,5 @@
-import { AccountModel } from "../../domain/account-model";
-import { AddAccount, AddAccountModel } from "../../domain/usecases/add-account";
+import { AccountModel } from "../../../domain/account-model";
+import { AddAccount, AddAccountModel } from "../../../domain/usecases/add-account";
 import { AddAccountRepository, Hasher, LoadAccountByEmailRepository} from "./db-add-account-protocols";
 
 export class DbAddAccount implements AddAccount {

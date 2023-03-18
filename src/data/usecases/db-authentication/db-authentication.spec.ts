@@ -1,5 +1,5 @@
-import { AccountModel } from "../../domain/account-model";
-import { DbAuthentication } from "./db-authetication";
+import { AccountModel } from "../../../domain/account-model";
+import { DbAuthentication } from "./db-authentication";
 import { 
   LoadAccountByEmailRepository, 
   UpdateAccessTokenRepository, 
