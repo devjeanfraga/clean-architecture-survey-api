@@ -1,6 +1,6 @@
 import { SignUpController } from "./signup-controller";
-import { AccountModel } from '../../../domain/models/account-model';
-import { InvalidParamError } from '../../errors';
+import { AccountModel } from '../../../../domain/models/account-model';
+import { InvalidParamError } from '../../../errors';
 import {
   HttpRequest, 
   Validation, 
@@ -15,7 +15,7 @@ import {
   AddAccountModel
 } from './signup-controller-protocols';
 
-jest.mock('../../../validations/validations-composite.ts'); 
+jest.mock('../../../../validations/validations-composite.ts'); 
 
 const httpRequest: HttpRequest = {
   body: {
