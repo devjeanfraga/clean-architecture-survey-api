@@ -1,4 +1,4 @@
-import { AccountModel } from "../../../domain/account-model";
+import { AccountModel } from "../../../domain/models/account-model";
 import { DbAuthentication } from "./db-authentication";
 import { 
   LoadAccountByEmailRepository, 

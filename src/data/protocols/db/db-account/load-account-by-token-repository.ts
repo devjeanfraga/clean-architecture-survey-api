@@ -1,4 +1,4 @@
-import { AccountModel } from "../../../usecases/db-load-account-by-token/db-load-account-by-token-protocols"
+import { AccountModel } from "../../../../domain/models/account-model"
 
 export interface LoadAccountByTokenRepository {
   loadByToken (token: string, role?: string): Promise<AccountModel>

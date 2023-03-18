@@ -1,5 +1,5 @@
 import { SignUpController } from "./signup-controller";
-import { AccountModel } from '../../../domain/account-model';
+import { AccountModel } from '../../../domain/models/account-model';
 import { InvalidParamError } from '../../errors';
 import {
   HttpRequest, 

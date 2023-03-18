@@ -1,4 +1,4 @@
-import { SurveyModel } from "../../../../domain/survey-model";
+import { SurveyModel } from "../../../../domain/models/survey-model";
 import { Collection, ObjectId } from "mongodb";
 import { MongoHelper } from "../mongo-helpers";
 import { SurveyRepository } from "./survey-repository";

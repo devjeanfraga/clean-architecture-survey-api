@@ -1,6 +1,6 @@
 import { AddAccountRepository } from "../../../../data/protocols/db/db-account/add-account-repository";
 import { AddAccountModel } from "../../../../domain/usecases/add-account";
-import { AccountModel } from "../../../../domain/account-model";
+import { AccountModel } from "../../../../domain/models/account-model";
 import { MongoHelper } from "../mongo-helpers";
 import { LoadAccountByEmailRepository } from "../../../../data/protocols/db/db-account/load-account-by-email-repository";
 import { UpdateAccessTokenRepository } from "../../../../data/protocols/db/db-account/update-access-token-repository";
