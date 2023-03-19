@@ -1,8 +1,11 @@
 import { MongoHelper } from "../mongo-helpers";
-import { AddSurveyModel, AddSurveyRepository } from "../../../../data/usecases/db-add-survey/db-add-survey-protocols";
-import { LoadSurveysRepository, SurveyModel } from "../../../../data/usecases/db-load-surveys/db-load-surveys-protocols";
+import { SurveyModel } from "../../../../domain/models/survey-model";
+import { AddSurveyModel } from "../../../../domain/usecases/add-survey";
+import { AddSurveyRepository } from "../../../../data/protocols/db/db-survey/add-survey-repository";
+import { LoadSurveysRepository } from "../../../../data/protocols/db/db-survey/load-surveys-repository";
+import { LoadSurveyByIdRepository } from "../../../../data/protocols/db/db-survey/load-survey-by-id-repository";
 
-export class SurveyRepository implements AddSurveyRepository, LoadSurveysRepository {
+export class SurveyRepository implements AddSurveyRepository, LoadSurveysRepository, LoadSurveyByIdRepository {
   constructor(){}
 
   async addSurvey(dataSurvey: AddSurveyModel): Promise<void> {
@@ -18,5 +21,14 @@ export class SurveyRepository implements AddSurveyRepository, LoadSurveysReposit
 
     for (const survey of surveysList) res.push(MongoHelper.map(survey)); 
     return res;
+  }
+
+  async loadById(id: string): Promise<SurveyModel> {
+    const {makeObjectId} = MongoHelper;
+    const collection = MongoHelper.getCollection('surveys');
+    const survey = await collection.findOne({
+      _id: makeObjectId(id)
+    });
+    return survey && MongoHelper.map(survey); 
   }
 }
