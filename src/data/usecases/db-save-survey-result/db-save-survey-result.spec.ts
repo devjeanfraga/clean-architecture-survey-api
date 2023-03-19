@@ -5,7 +5,7 @@ const fakeDataSurveyResult = {
   surveyId: 'any-surveyId',
   accountId: 'any-account-Id', 
   answer: 'any-answer', 
-  data: new Date(),
+  date: new Date(),
 }; 
 
 const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {

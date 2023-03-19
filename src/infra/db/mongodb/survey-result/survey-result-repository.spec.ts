@@ -7,7 +7,7 @@ const fakeDataSurvey: AddSurveyResultModel = {
   surveyId: 'any-surveyId',
   accountId: 'any-accountId',
   answer: 'any-answer',
-  data: new Date() 
+  date: new Date() 
 }
 
 const sut = new SurveyResultRepository();

@@ -3,6 +3,6 @@ export interface SurveyResultModel {
   surveyId: string;
   accountId: string; 
   answer: string; 
-  data: Date;
+  date: Date;
 } 
 
