@@ -2,11 +2,18 @@ import { LoadSurveyByIdRepository, SurveyModel } from "./db-load-survey-by-id-pr
 import { DbLoadSurveyById } from "./db-load-survey-by-id";
 
 const id = 'any-id'
+const fakeSurvey: SurveyModel = {
+  id: 'any-id',
+  question: 'any-question',
+  answers: [{answer: 'any-answer-1', image: 'any-image'}, {answer: 'any-answer-1'}],
+  date: new Date() 
+} 
+
 
 const makeLoadSurveyByIdRepository = (): LoadSurveyByIdRepository => {
   class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
     loadById(id: string): Promise<SurveyModel> {
-      return null; 
+      return Promise.resolve(fakeSurvey); 
     }
   }
   return new LoadSurveyByIdRepositoryStub(); 
@@ -33,5 +40,13 @@ describe('DbLoadSurveyById', () => {
 
     await sut.load(id);
     expect(spyLoadById).toHaveBeenCalledWith(id);
+  });
+
+  it('Should return null if loadById LoaSurveyByIdRepository method returns null', async () => {
+    const { sut, loadSurveyByIdRepositoryStub } = makeSut();
+    jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.resolve(null));
+
+    const promise = await sut.load(id);
+    expect(promise).toBeNull();
   });
 });
