@@ -9,7 +9,7 @@ export class SaveSurveyResultController implements Controller {
     try {
       const { surveyId } = httpRequest.params;
       const survey = await this.loadSurveyById.load(surveyId);
-      if (!survey) return forbidden(new InvalidParamError('id'));
+      if (!survey) return forbidden(new InvalidParamError('surveyId'));
       return null;
     } catch (error) {
       return serverError(error); 
