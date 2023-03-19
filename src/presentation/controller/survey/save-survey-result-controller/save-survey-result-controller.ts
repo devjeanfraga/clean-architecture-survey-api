@@ -5,6 +5,7 @@ import {
   HttpResponse, 
   InvalidParamError, 
   LoadSurveyById, 
+  ok, 
   SaveSurveyResult, 
   serverError 
 } from "./save-survey-result-controller-protocols";
@@ -29,13 +30,15 @@ export class SaveSurveyResultController implements Controller {
       const isValidAnswer = this.isValidAnswer(answer, survey.answers); 
       if(!isValidAnswer) return forbidden(new InvalidParamError('answer'));
       
-      await this.saveSurveyResult.save({
+      const data = {
         surveyId,
         accountId,
         answer,
         date: new Date()
-      });
-      return null;
+      }
+      const savedSurveyResult = await this.saveSurveyResult.save(data);
+      
+      return ok(savedSurveyResult);
     } catch (error) {
       return serverError(error); 
     }
