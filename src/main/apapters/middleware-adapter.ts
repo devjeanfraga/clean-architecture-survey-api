@@ -10,8 +10,8 @@ export const makeMiddlewareAdapter = (controller: Controller) => {
 
     const httpResponse: HttpResponse = await controller.handle(httpRequest);
     const { statusCode } = httpResponse;
-    if( statusCode >= 200 && statusCode <= 299 ) {
-      { httpResponse.body, httpRequest.headers }
+    if( statusCode >= 200 && statusCode <= 299 ) { 
+      Object.assign(req, httpResponse.body) //req.accountId = httpResponse.body.accountId
       next();
     }
     else {
