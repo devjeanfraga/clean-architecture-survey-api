@@ -99,6 +99,6 @@ describe('AuthMiddleware', () => {
   it("should return 200 if  loadByToken LoadAcccountByToken on success", async () => {
     const { sut } = makeSut();
     const response = await sut.handle(fakeRequest);
-    expect(response).toEqual(ok({id: fakeAccount.id}))
+    expect(response).toEqual(ok({accountId: fakeAccount.id}))
   });
 });
