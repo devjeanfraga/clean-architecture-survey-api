@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { makeRouteAdapter } from "../apapters/express-adapter";
 import { makeMiddlewareAdapter } from "../apapters/middleware-adapter";
-import { makeAuthMiddleware } from "../factories/survey/add-survey/auth-middleware-factory";
+import { makeAuthMiddleware } from "../factories/middlewares/auth-middleware-factory";
 import { makeAddSurveyController } from "../factories/survey/add-survey/add-survey-controller-factory";
 import { makeLoadSurveysController } from "../factories/survey/load-surveys/load-surveys-controller-factory";
 export default (router: Router): void => {
