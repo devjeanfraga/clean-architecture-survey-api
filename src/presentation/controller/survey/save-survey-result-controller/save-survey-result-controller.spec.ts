@@ -11,8 +11,7 @@ import {
   SaveSurveyResult,
   ok
 } from "./save-survey-result-controller-protocols";
-
-const date = new Date(); 
+import MockDate from 'mockdate'; 
 
 const fakeRequest: HttpRequest = {
   body: {
@@ -23,19 +22,11 @@ const fakeRequest: HttpRequest = {
   },
   accountId: 'any-accountId'
 };
-
-const fakeSurvey: SurveyModel = {
-  id: 'any-id',
-  question: 'any-question',
-  answers: [{answer: 'valid-answer-1', image: 'any-image'}, {answer: 'valid-answer-2'}],
-  date: date
-};
-
-const inputSaveSurveyResult: AddSurveyResultModel = {
+const inputSaveSurveyResult = {
   surveyId: 'any-id',
   accountId: 'any-accountId',
   answer: 'valid-answer-2',
-  date: date
+  date: new Date()
 }; 
 
 const fakeSavedSurveyResult = {id: 'any-id', ...inputSaveSurveyResult}
@@ -43,12 +34,16 @@ const fakeSavedSurveyResult = {id: 'any-id', ...inputSaveSurveyResult}
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
     load(surveyId: string): Promise<SurveyModel> {
-      return Promise.resolve(fakeSurvey);
+      return Promise.resolve({
+        id: 'any-id',
+        question: 'any-question',
+        answers: [{answer: 'valid-answer-1', image: 'any-image'}, {answer: 'valid-answer-2'}],
+        date: new Date()
+      });
     }
   }
   return new LoadSurveyByIdStub();
 };
-
 const makeSaveSurveyResult = (): SaveSurveyResult => {
   class SaveSurveyResultStub implements SaveSurveyResult {
     save(data: AddSurveyResultModel): Promise<SurveyResultModel> {
@@ -63,6 +58,7 @@ interface SutTypes {
   loadSurveyByIdStub: LoadSurveyById;
   saveSurveyResultStub: SaveSurveyResult;
 }
+
 const makeSut = (): SutTypes => {
   const loadSurveyByIdStub = makeLoadSurveyById();
   const saveSurveyResultStub = makeSaveSurveyResult();
@@ -74,6 +70,15 @@ const makeSut = (): SutTypes => {
   }
 }
 describe('SaveSurveyResultController', () => {
+
+  beforeAll (()=> {
+    MockDate.set(new Date());
+  });
+
+  afterAll(()=> {
+    MockDate.reset(); 
+  })
+  
   it('should call load LoadSurveyById method with correct values', async () => {
     const { sut, loadSurveyByIdStub } = makeSut();
     const spyLoadById = jest.spyOn(loadSurveyByIdStub, 'load');
@@ -129,7 +134,6 @@ describe('SaveSurveyResultController', () => {
     expect(promise).toEqual(serverError(new Error()));
   });
 
-  
   it('should return 200 if save SaveSurveyResult method on success', async () => {
     const { sut } = makeSut();
 

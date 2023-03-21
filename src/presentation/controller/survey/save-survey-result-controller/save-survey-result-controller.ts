@@ -23,7 +23,6 @@ export class SaveSurveyResultController implements Controller {
       const { surveyId } = httpRequest.params;
       const { answer } = httpRequest.body;
       const { accountId } = httpRequest;
-      console.log(accountId)
 
       const survey = await this.loadSurveyById.load(surveyId);
       if (!survey) return forbidden(new InvalidParamError('surveyId'));
@@ -37,6 +36,7 @@ export class SaveSurveyResultController implements Controller {
         answer,
         date: new Date()
       }
+
       const savedSurveyResult = await this.saveSurveyResult.save(data);
       
       return ok(savedSurveyResult);
