@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { SurveyModel, LoadSurveysRepository} from "./db-load-surveys-protocols";
 import { DbLoadSurveys } from "./db-load-surveys";
 
@@ -10,7 +11,7 @@ const listSurveys: SurveyModel[] = [
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
     ],
-    date: new Date(),
+    date: faker.date.recent(),
   },
   {
     id: 'any-id',
@@ -20,7 +21,7 @@ const listSurveys: SurveyModel[] = [
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
     ],
-    date: new Date(),
+    date: faker.date.recent(),
   }
 ]
 

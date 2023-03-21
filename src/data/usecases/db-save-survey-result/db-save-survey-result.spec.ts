@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { SaveSurveyResultRepository, AddSurveyResultModel, SurveyResultModel } from "./db-save-survey-result-protocols";
 import { DbSaveSurveyResult } from "./db-save-survey-result";
 
@@ -5,7 +6,7 @@ const fakeDataSurveyResult = {
   surveyId: 'any-surveyId',
   accountId: 'any-account-Id', 
   answer: 'any-answer', 
-  date: new Date(),
+  date: faker.date.recent(),
 }; 
 
 const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {

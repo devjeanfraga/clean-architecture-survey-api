@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { Collection } from "mongodb";
 import { AddSurveyResultModel } from "../../../../domain/usecases/save-survey-result";
 import { MongoHelper } from "../mongo-helpers";
@@ -7,7 +8,7 @@ const fakeDataSurvey: AddSurveyResultModel = {
   surveyId: 'any-surveyId',
   accountId: 'any-accountId',
   answer: 'any-answer',
-  date: new Date() 
+  date: faker.date.recent() 
 }
 
 const sut = new SurveyResultRepository();

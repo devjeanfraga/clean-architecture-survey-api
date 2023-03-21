@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { LoadSurveysController } from "./load-survey-controller";
 import { LoadSurveys, SurveyModel, serverError, ok } from "./load-surveys-controller-protocols";
 
@@ -11,7 +12,7 @@ const listSurveys: SurveyModel[] = [
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
     ],
-    date: new Date(),
+    date: faker.date.recent(),
   },
   {
     id: 'any-id',
@@ -21,7 +22,7 @@ const listSurveys: SurveyModel[] = [
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
     ],
-    date: new Date(),
+    date: faker.date.recent(),
   }
 ]
 

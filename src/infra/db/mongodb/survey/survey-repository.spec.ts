@@ -1,5 +1,5 @@
-import { SurveyModel } from "../../../../domain/models/survey-model";
-import { Collection, ObjectId } from "mongodb";
+import { faker } from "@faker-js/faker";
+import { Collection } from "mongodb";
 import { MongoHelper } from "../mongo-helpers";
 import { SurveyRepository } from "./survey-repository";
 
@@ -10,7 +10,7 @@ const dataSurvey = {
     { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
     { answer: 'any-answer-03'}
   ],
-  date: new Date()
+  date: faker.date.recent()
 };
 
 const dataSurveyList = [
@@ -21,7 +21,7 @@ const dataSurveyList = [
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
     ],
-    date: new Date()
+    date: faker.date.recent()
   },
 
   {
@@ -31,7 +31,7 @@ const dataSurveyList = [
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
     ],
-    date: new Date()
+    date: faker.date.recent()
   },
 
   {
@@ -41,7 +41,7 @@ const dataSurveyList = [
       { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
       { answer: 'any-answer-03'}
     ],
-    date: new Date()
+    date: faker.date.recent()
   }
 ];
 

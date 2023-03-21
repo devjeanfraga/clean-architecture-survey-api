@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { MongoHelper } from "../../../src/infra/db/mongodb/mongo-helpers";
 import { Collection } from "mongodb";
 import jwt from 'jsonwebtoken';
@@ -51,7 +52,7 @@ describe('PUT /surveys/:surveyId/results', () => {
           { answer: '01-valid-answer-02', image: 'http://localhost:8080/any-image'},
           { answer: '01-valid-answer-03'}
         ],
-        date: new Date()
+        date: faker.date.recent()
       }, 
       {
         question: 'valid-question-2',
@@ -60,7 +61,7 @@ describe('PUT /surveys/:surveyId/results', () => {
           { answer: '02-valid-answer-02', image: 'http://localhost:8080/any-image'},
           { answer: '02-valid-answer-03'}
         ],
-        date: new Date()
+        date: faker.date.recent()
 
       }
     ];

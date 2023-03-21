@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { LoadSurveyByIdRepository, SurveyModel } from "./db-load-survey-by-id-protocols";
 import { DbLoadSurveyById } from "./db-load-survey-by-id";
 
@@ -6,7 +7,7 @@ const fakeSurvey: SurveyModel = {
   id: 'any-id',
   question: 'any-question',
   answers: [{answer: 'any-answer-1', image: 'any-image'}, {answer: 'any-answer-1'}],
-  date: new Date() 
+  date: faker.date.recent() 
 } 
 
 

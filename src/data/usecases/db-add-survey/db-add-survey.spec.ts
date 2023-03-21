@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { DbAddSurvey } from "./db-add-survey";
 import { AddSurveyRepository, AddSurveyModel} from "./db-add-survey-protocols";
 
@@ -8,7 +9,7 @@ const dataSurvey = {
     { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
     { answer: 'any-answer-03'}
   ],
-  date: new Date()
+  date: faker.date.recent()
 }; 
 
 const makeAddSurveyRepository = (): AddSurveyRepository => {
