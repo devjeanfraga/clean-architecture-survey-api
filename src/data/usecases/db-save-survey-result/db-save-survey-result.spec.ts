@@ -105,4 +105,10 @@ describe('DbSaveSurveyResult', () => {
     await expect(promise).rejects.toThrow();
   });
 
+  it('Should return survey result if loadResult LoadSurveyResultBySurveyIdRepository on success', async () => {
+    const {sut, loadSurveyResultBySurveyIdRepositoryStub} = makeSut();
+    jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult');
+     const promise = await sut.save(fakeDataSurveyResult);
+    expect(promise).toEqual(fakeSurveyResult)
+  });
 })
