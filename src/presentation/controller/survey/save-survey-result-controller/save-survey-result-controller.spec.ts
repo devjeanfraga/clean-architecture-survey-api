@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import { SaveSurveyResultController } from "./save-survey-result-controller";
 import { 
   forbidden, 
@@ -22,6 +23,7 @@ const fakeRequest: HttpRequest = {
   },
   accountId: 'any-accountId'
 };
+
 const inputSaveSurveyResult = {
   surveyId: 'any-id',
   accountId: 'any-accountId',
@@ -29,7 +31,20 @@ const inputSaveSurveyResult = {
   date: new Date()
 }; 
 
-const fakeSavedSurveyResult = {id: 'any-id', ...inputSaveSurveyResult}
+const fakeSurveyResult = {
+  surveyId: 'any-surveyId',
+  accountId: 'any-account-Id', 
+  answers: [
+    {
+      answer: 'any-answer-1',
+      image: 'any-image-1',
+      count: 1,
+      percent: '100%',
+      isCurrentAccountAnswer: false 
+    }
+  ],
+  date: faker.date.past()
+}
 
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
@@ -47,7 +62,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 const makeSaveSurveyResult = (): SaveSurveyResult => {
   class SaveSurveyResultStub implements SaveSurveyResult {
     save(data: AddSurveyResultModel): Promise<SurveyResultModel> {
-      return Promise.resolve(fakeSavedSurveyResult);
+      return Promise.resolve(fakeSurveyResult);
     }
   }
   return new SaveSurveyResultStub();
@@ -138,6 +153,6 @@ describe('SaveSurveyResultController', () => {
     const { sut } = makeSut();
 
     const promise = await sut.handle(fakeRequest); 
-    expect(promise).toEqual(ok(fakeSavedSurveyResult));
+    expect(promise).toEqual(ok(fakeSurveyResult));
   });
 });
