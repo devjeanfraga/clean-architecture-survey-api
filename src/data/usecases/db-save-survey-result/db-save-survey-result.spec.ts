@@ -11,7 +11,7 @@ const fakeDataSurveyResult = {
 
 const fakeSurveyResult = {
   surveyId: 'any-surveyId',
-  accountId: 'any-account-Id', 
+  question: 'any-question', 
   answers: [
     {
       answer: 'any-answer-1',
