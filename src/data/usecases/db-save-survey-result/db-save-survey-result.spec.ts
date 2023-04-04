@@ -95,6 +95,14 @@ describe('DbSaveSurveyResult', () => {
     expect(spyLoadResult).toHaveBeenCalledWith('any-surveyId', 'any-account-Id')
   });
 
+  it('Should throw if loadResult LoadSurveyResultBySurveyIdRepository method throws', async () => {
+    const {sut, saveSurveyResultRepositoryStub } = makeSut();
+    jest.spyOn(saveSurveyResultRepositoryStub, 'saveResult').mockImplementationOnce(()=> {
+      throw new Error();
+    });
 
+    const promise = sut.save(fakeDataSurveyResult);
+    await expect(promise).rejects.toThrow();
+  });
 
 })
