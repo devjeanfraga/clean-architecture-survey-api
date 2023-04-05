@@ -7,31 +7,40 @@ import { SurveyResultRepository } from "./survey-result-repository";
 const fakeDataSurvey: AddSurveyResultModel = {
   surveyId: 'any-surveyId',
   accountId: 'any-accountId',
-  answer: 'any-answer',
+  answer: 'any-answer-03',
   date: faker.date.recent() 
 }
 
 const sut = new SurveyResultRepository();
+
 describe('SurveyResultRepository', () => {
-  let surveyCollection: Collection;
+
+  let surveyResultCollection: Collection;
+  let surveysCollection: Collection;
+  let accountCollection: Collection;
+
   beforeAll( async () => {
   await MongoHelper.connect(global.__MONGO_URI__);   
   });
 
   beforeEach(async () => {
-    surveyCollection =  MongoHelper.getCollection('survey-result');
-    surveyCollection.deleteMany({});
+    accountCollection = MongoHelper.getCollection('accounts');
+    await accountCollection.deleteMany({});
+
+    surveyResultCollection = MongoHelper.getCollection('survey-result');
+    await surveyResultCollection.deleteMany({});
+
+    surveysCollection = MongoHelper.getCollection('surveys');
+    await surveysCollection.deleteMany({});
   })
 
   afterAll(async () =>{
     await MongoHelper.disconnect();
   });
 
-  it('Should save survey result and return a survey result on saveResult success', async () => {
-    const promise = await sut.saveResult(fakeDataSurvey);
-    expect(promise.id).toBeTruthy();
-    expect(promise.surveyId).toBeTruthy();
-    expect(promise.accountId).toBeTruthy();
-    expect(promise.answer).toBeTruthy();
+  it('Should save answer result on saveResult success', async () => {
+    await sut.saveResult(fakeDataSurvey);
+    const promise = await surveyResultCollection.countDocuments();
+    expect(promise).toBe(1);
   });
 })
