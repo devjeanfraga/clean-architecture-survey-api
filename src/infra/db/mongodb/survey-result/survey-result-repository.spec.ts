@@ -43,4 +43,46 @@ describe('SurveyResultRepository', () => {
     const promise = await surveyResultCollection.countDocuments();
     expect(promise).toBe(1);
   });
+
+  it ('Should load survey result if LoadResult LoadSurveyResultBySurveyIdRepository on success', async () => {
+    const account = await accountCollection.insertOne({
+        name: 'any-name',
+        email:'any@mail.com',
+        password: 'any-password'
+    });
+
+    const dataSurvey = {
+      question: 'any-question',
+      answers: [
+        { answer: 'any-answer-01', image: 'http://localhost:8080/any-image'},
+        { answer: 'any-answer-02', image: 'http://localhost:8080/any-image'},
+        { answer: 'any-answer-03'}
+      ],
+      date: faker.date.recent()
+    };
+    const {insertedId} = await surveysCollection.insertOne(dataSurvey); 
+    const surveyId = insertedId;
+    await surveyResultCollection.insertMany([{
+      surveyId: surveyId,
+      accountId: account.insertedId,
+      answer: 'any-answer-03',
+      date: faker.date.recent() 
+    },
+    {
+      surveyId: surveyId,
+      accountId: account.insertedId,
+      answer: 'any-answer-02',
+      date: faker.date.recent() 
+    },
+    {
+      surveyId: surveyId,
+      accountId: account.insertedId,
+      answer: 'any-answer-02',
+      date: faker.date.recent() 
+    },
+    ]);
+
+    const promise = await sut.loadResult(surveyId.toString(), account.insertedId.toString());
+    expect(promise.surveyId).toBeTruthy();
+  })
 })
