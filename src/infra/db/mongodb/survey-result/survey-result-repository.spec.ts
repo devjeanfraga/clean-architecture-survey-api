@@ -51,6 +51,18 @@ describe('SurveyResultRepository', () => {
         password: 'any-password'
     });
 
+    const account2 = await accountCollection.insertOne({
+      name: 'any-name',
+      email:'any@mail.com',
+      password: 'any-password'
+    });
+
+    const account3 = await accountCollection.insertOne({
+      name: 'any-name',
+      email:'any@mail.com',
+      password: 'any-password'
+    });  
+
     const dataSurvey = {
       question: 'any-question',
       answers: [
@@ -70,13 +82,13 @@ describe('SurveyResultRepository', () => {
     },
     {
       surveyId: surveyId,
-      accountId: account.insertedId,
+      accountId: account2.insertedId,
       answer: 'any-answer-02',
       date: faker.date.recent() 
     },
     {
       surveyId: surveyId,
-      accountId: account.insertedId,
+      accountId: account3.insertedId,
       answer: 'any-answer-02',
       date: faker.date.recent() 
     },

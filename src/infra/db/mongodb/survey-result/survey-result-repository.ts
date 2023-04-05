@@ -60,6 +60,15 @@ export class SurveyResultRepository implements SaveSurveyResultRepository, LoadS
         },
         totalAnswer: {
             $sum: 1
+        },
+        currentAccountAnswer: {
+          $push: { 
+            $cond: [
+              { $eq: ['$data.accountId', MongoHelper.makeObjectId(accountId)] },
+              '$data.answer',
+              '$invalid'
+            ]
+          }
         }
       })
       .project({
@@ -86,6 +95,18 @@ export class SurveyResultRepository implements SaveSurveyResultRepository, LoadS
                                 then: { $multiply: [ { $divide: ['$totalAnswer', '$_id.totalSurveyAnswers'] }, 100 ] }, 
                                 else: 0 
                             }
+                        },
+                        isCurrentAccountAnswer: { 
+                          $cond: [
+                            { 
+                              $eq: [
+                                '$$item.answer', 
+                                {$arrayElemAt: ['$currentAccountAnswer', 0]}
+                              ]
+                            },
+                            1,
+                            0
+                          ]
                         }
                     }]
                 }
@@ -127,13 +148,16 @@ export class SurveyResultRepository implements SaveSurveyResultRepository, LoadS
             question: '$question',
             date: '$date',
             answer: '$answers.answer',
-            image: '$answers.image'   
+            image: '$answers.image',
         },
         count: {
             $sum: '$answers.count'
         },
         percent: {
-            $sum: '$answers.percent'
+            $sum: { $round: ['$answers.percent', 0]}
+        },
+        isCurrentAccountAnswer: {
+          $sum: '$answers.isCurrentAccountAnswer'
         }           
       })
       .project({
@@ -145,10 +169,11 @@ export class SurveyResultRepository implements SaveSurveyResultRepository, LoadS
             answer: '$_id.answer',
             image: '$_id.image',
             count: '$count',
-            percent: '$percent'
+            percent: '$percent',
+            isCurrentAccountAnswer: { $eq: ['$isCurrentAccountAnswer', 1] }
         }   
       })
-      .sort({
+      .sort({ 
         'answers.percent': -1
       })
       .group({
@@ -172,6 +197,7 @@ export class SurveyResultRepository implements SaveSurveyResultRepository, LoadS
       })
       .build();
     const surveyResult = await surveyResultCollection.aggregate<SurveyResultModel>(query).toArray();
+    console.log(surveyResult[0]);
     return surveyResult.length ? surveyResult[0] : null; 
   }
 }
