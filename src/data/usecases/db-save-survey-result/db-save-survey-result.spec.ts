@@ -38,7 +38,7 @@ const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
 
 const makeLoadSurveyResultBySurveyIdRepository = (): LoadSurveyResultBySurveyIdRepository => {
   class LoadSurveyResultBySurveyIdRepositoryStub implements LoadSurveyResultBySurveyIdRepository {
-    async loadResult(surveyId: string, accountId?: string): Promise<SurveyResultModel> {
+    async loadResult(surveyId: string, accountId: string): Promise<SurveyResultModel> {
       return Promise.resolve(fakeSurveyResult);
     }
   }
