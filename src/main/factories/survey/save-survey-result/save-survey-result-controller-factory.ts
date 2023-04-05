@@ -13,7 +13,7 @@ export const makeSaveSurveyResultController = () : Controller => {
   const surveyResultRepositry = new SurveyResultRepository();
   
   const dbLoadSurveyById = new DbLoadSurveyById(surveyRepsittory);
-  const dbSaveSurveyResult = new DbSaveSurveyResult(surveyResultRepositry);
+  const dbSaveSurveyResult = new DbSaveSurveyResult(surveyResultRepositry, surveyResultRepositry);
   
   const saveSurveyResultController = new SaveSurveyResultController(dbLoadSurveyById, dbSaveSurveyResult);
   const logRepository = new LogMongoRepository();
