@@ -7,9 +7,9 @@ export interface SurveyResultModel {
 
 interface SurveyAnswerModel {
   answer: string;
-  image: string;
+  image?: string;
   count: number;
-  percent: string;
+  percent: number;
   isCurrentAccountAnswer: boolean;
 }
 
