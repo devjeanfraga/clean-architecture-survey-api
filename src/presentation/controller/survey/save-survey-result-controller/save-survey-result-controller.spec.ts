@@ -39,7 +39,7 @@ const fakeSurveyResult = {
       answer: 'any-answer-1',
       image: 'any-image-1',
       count: 1,
-      percent: '100%',
+      percent: 100,
       isCurrentAccountAnswer: false 
     }
   ],

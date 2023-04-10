@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { LoadSurveyByIdRepository, LoadSurveyResultBySurveyIdRepository, SurveyResultModel } from "./db-load-survey-result-protocols";
 import { DbLoadSurveyResult } from './db-load-survey-result';
 import { SurveyModel } from "../db-load-surveys/db-load-surveys-protocols";
+import { rejects } from "assert";
 
 const fakeSurveyResult = {
   surveyId: 'any-surveyId',
@@ -11,11 +12,18 @@ const fakeSurveyResult = {
       answer: 'any-answer-1',
       image: 'any-image-1',
       count: 1,
-      percent: '100%',
+      percent: 100,
       isCurrentAccountAnswer: false 
     }
   ],
   date: faker.date.past()
+}
+
+const fakeSurvey = {
+  id: 'any-id',
+  question: 'any-question',
+  answers: [{answer: 'any-answer-1', image: 'any-image'}, {answer: 'any-answer-1'}],
+  date: faker.date.recent() 
 }
 
 const makeloadSurveyResultBySurveyIdRepository = (): LoadSurveyResultBySurveyIdRepository => {
@@ -30,12 +38,7 @@ const makeloadSurveyResultBySurveyIdRepository = (): LoadSurveyResultBySurveyIdR
 const makeloadSurveyRepository = (): LoadSurveyByIdRepository => {
   class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
     loadById(id: string): Promise<SurveyModel> {
-      return Promise.resolve({
-        id: 'any-id',
-        question: 'any-question',
-        answers: [{answer: 'any-answer-1', image: 'any-image'}, {answer: 'any-answer-1'}],
-        date: faker.date.recent() 
-      } ); 
+      return Promise.resolve(fakeSurvey); 
     }
   }
   return new LoadSurveyByIdRepositoryStub();
@@ -84,12 +87,21 @@ describe('DbLoadSurveyResult Usecase', () => {
     await expect(promise).rejects.toThrow();
   });
 
-  // it ('Should throws if loadById LoadSurveyByIdRepository method if throws', async ()  => {
-  //   const {sut, loadSurveyByIdRepositoryStub } = makeSut();
-  //   jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockImplementationOnce(()=> {
-  //     throw new Error();
-  //   });
-  //   const promise = await sut.load('any-survey-id', 'any-account-id');
-  //   expect(promise).toThrow();
-  // });
+  it ('Should return surveyResultModel with all answers with count 0 if LoadSurveyResultRepository returns null', async ()  => {
+    const {sut, loadSurveyResultBySurveyIdRepositoryStub, loadSurveyByIdRepositoryStub } = makeSut();
+    jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult').mockReturnValueOnce(null);
+    const promise = await sut.load('any-survey-id', 'any-account-id');
+    expect(promise).toEqual({
+      surveyId: fakeSurvey.id,
+      question: fakeSurvey.question, 
+      date:fakeSurvey.date,
+      answers: fakeSurvey.answers.map(answer => ({
+        ...answer,
+        count: 0,
+        percent: 0,
+        isCurrentAccountAnswer: false 
+      }))
+    })
+
+  });
 });
