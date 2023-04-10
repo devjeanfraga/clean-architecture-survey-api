@@ -11,7 +11,7 @@ export class DbLoadSurveyResult implements LoadSurveyResult {
     if (!surveyResult) {
       await this.loadSurveyByIdRepository.loadById(surveyId); 
     } 
-    return null; 
+    return surveyResult; 
   }
 
 }
