@@ -29,7 +29,6 @@ const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
   class SaveSurveyResultRepositoryStub implements SaveSurveyResultRepository {
     async saveResult (data: AddSurveyResultModel): Promise<void> {
       return Promise.resolve(); 
-      //return Promise.resolve({id: 'any-id',...fakeDataSurveyResult}); 
 
     }
   }
@@ -69,14 +68,6 @@ describe('DbSaveSurveyResult', () => {
     await sut.save(fakeDataSurveyResult);
     expect(spySaveResult).toHaveBeenCalledWith(fakeDataSurveyResult);
   });
-
-  // it('Should return null if saveResult SaveSurveyResultRepository method return null', async () => {
-  //   const {sut, saveSurveyResultRepositoryStub } = makeSut();
-  //   jest.spyOn(saveSurveyResultRepositoryStub, 'saveResult').mockReturnValueOnce(Promise.resolve(null));
-
-  //   const promise = await sut.save(fakeDataSurveyResult);
-  //   expect(promise).toBeNull(); 
-  // });
 
   it('Should throw if saveResult SaveSurveyResultRepository method throws', async () => {
     const {sut, saveSurveyResultRepositoryStub } = makeSut();
