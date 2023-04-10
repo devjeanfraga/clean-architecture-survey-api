@@ -61,4 +61,13 @@ describe('DbLoadSurveyResult Usecase', () => {
     await sut.load('any-survey-id', 'any-account-id');
     expect(spyloadBySurveyId).toHaveBeenCalledWith('any-survey-id', 'any-account-id');
   });
+
+  it ('Should call loadById LoadSurveyByIdRepository method with correct values if LoadSurveyResultRepository returns null', async ()  => {
+    const {sut, loadSurveyResultBySurveyIdRepositoryStub, loadSurveyByIdRepositoryStub } = makeSut();
+    jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult').mockReturnValueOnce(null);
+    const spyloadById = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById');
+    await sut.load('any-survey-id', 'any-account-id');
+    expect(spyloadById).toHaveBeenCalledWith('any-survey-id');
+  });
+
 });
