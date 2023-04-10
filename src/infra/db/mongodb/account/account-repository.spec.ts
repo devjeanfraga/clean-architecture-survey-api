@@ -7,17 +7,18 @@ const sut = new AccountRepository();
 describe("AccountRepository", () => {
   let accountCollection: Collection;
   beforeAll( async () => {
-  await MongoHelper.connect(global.__MONGO_URI__);   
+    await MongoHelper.connect(global.__MONGO_URI__);   
   });
 
   beforeEach(async () => {
     accountCollection =  MongoHelper.getCollection('accounts');
-    accountCollection.deleteMany({});
+    await accountCollection.deleteMany({});
   })
 
   afterAll(async () =>{
     await MongoHelper.disconnect();
   });
+
   it("Should return an account by add on success", async () => {
     const accountData = {
       name: 'any-name',
