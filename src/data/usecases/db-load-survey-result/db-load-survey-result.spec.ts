@@ -1,35 +1,64 @@
-import { LoadSurveyResultRepository, SurveyResultModel } from "./db-load-survey-result-protocols";
+import { faker } from "@faker-js/faker";
+import { LoadSurveyByIdRepository, LoadSurveyResultBySurveyIdRepository, SurveyResultModel } from "./db-load-survey-result-protocols";
 import { DbLoadSurveyResult } from './db-load-survey-result';
+import { SurveyModel } from "../db-load-surveys/db-load-surveys-protocols";
 
-const makeloadSurveyResultRepository = (): LoadSurveyResultRepository => {
-  class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository {
-    async loadBySurveyId (surveyId: string ): Promise<SurveyResultModel> {
-      return null; 
+const fakeSurveyResult = {
+  surveyId: 'any-surveyId',
+  question: 'any-question', 
+  answers: [
+    {
+      answer: 'any-answer-1',
+      image: 'any-image-1',
+      count: 1,
+      percent: '100%',
+      isCurrentAccountAnswer: false 
+    }
+  ],
+  date: faker.date.past()
+}
+
+const makeloadSurveyResultBySurveyIdRepository = (): LoadSurveyResultBySurveyIdRepository => {
+  class LoadSurveyResultBySurveyIdRepositoryStub implements LoadSurveyResultBySurveyIdRepository {
+    async loadResult(surveyId: string, accountId: string): Promise<SurveyResultModel> {
+      return Promise.resolve(fakeSurveyResult)
     }
   }
-  return new LoadSurveyResultRepositoryStub();
+  return new LoadSurveyResultBySurveyIdRepositoryStub();
+};
+
+const makeloadSurveyRepository = (): LoadSurveyByIdRepository => {
+  class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
+    loadById(id: string): Promise<SurveyModel> {
+      return null; 
+}
+  }
+  return new LoadSurveyByIdRepositoryStub();
 };
 
 interface SutTypes {
   sut: DbLoadSurveyResult;
-  loadSurveyResultRepositoryStub: LoadSurveyResultRepository;
+  loadSurveyResultBySurveyIdRepositoryStub: LoadSurveyResultBySurveyIdRepository;
+  loadSurveyByIdRepositoryStub: LoadSurveyByIdRepository;
 }
 
 const makeSut = (): SutTypes => {
-  const loadSurveyResultRepositoryStub = makeloadSurveyResultRepository();
-  const sut = new DbLoadSurveyResult(loadSurveyResultRepositoryStub);
+  const loadSurveyResultBySurveyIdRepositoryStub = makeloadSurveyResultBySurveyIdRepository();
+  const loadSurveyByIdRepositoryStub = makeloadSurveyRepository();
+  const sut = new DbLoadSurveyResult(loadSurveyResultBySurveyIdRepositoryStub, loadSurveyByIdRepositoryStub);
   return {
     sut,
-    loadSurveyResultRepositoryStub
+    loadSurveyResultBySurveyIdRepositoryStub,
+    loadSurveyByIdRepositoryStub
   } 
 };
 
 describe('DbLoadSurveyResult Usecase', () => {
 
   it ('Should call loadBySurveyId LoadSurveyResultRepository method with correct values', async ()  => {
-    const {sut, loadSurveyResultRepositoryStub } = makeSut();
-    const spyloadBySurveyId = jest.spyOn(loadSurveyResultRepositoryStub, 'loadBySurveyId');
-    await sut.load('any-survey-id');
-    expect(spyloadBySurveyId).toHaveBeenCalledWith('any-survey-id');
+    const {sut, loadSurveyResultBySurveyIdRepositoryStub } = makeSut();
+    const spyloadBySurveyId = jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult');
+    await sut.load('any-survey-id', 'any-account-id');
+    expect(spyloadBySurveyId).toHaveBeenCalledWith('any-survey-id', 'any-account-id');
   });
 });
