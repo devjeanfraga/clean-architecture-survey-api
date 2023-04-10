@@ -30,8 +30,13 @@ const makeloadSurveyResultBySurveyIdRepository = (): LoadSurveyResultBySurveyIdR
 const makeloadSurveyRepository = (): LoadSurveyByIdRepository => {
   class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
     loadById(id: string): Promise<SurveyModel> {
-      return null; 
-}
+      return Promise.resolve({
+        id: 'any-id',
+        question: 'any-question',
+        answers: [{answer: 'any-answer-1', image: 'any-image'}, {answer: 'any-answer-1'}],
+        date: faker.date.recent() 
+      } ); 
+    }
   }
   return new LoadSurveyByIdRepositoryStub();
 };
@@ -55,14 +60,14 @@ const makeSut = (): SutTypes => {
 
 describe('DbLoadSurveyResult Usecase', () => {
 
-  it ('Should call loadBySurveyId LoadSurveyResultRepository method with correct values', async ()  => {
+  it ('Should call loadResult LoadSurveyResultBySurveyIdRepository method with correct values', async ()  => {
     const {sut, loadSurveyResultBySurveyIdRepositoryStub } = makeSut();
-    const spyloadBySurveyId = jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult');
+    const spyLoadResult = jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult');
     await sut.load('any-survey-id', 'any-account-id');
-    expect(spyloadBySurveyId).toHaveBeenCalledWith('any-survey-id', 'any-account-id');
+    expect(spyLoadResult).toHaveBeenCalledWith('any-survey-id', 'any-account-id');
   });
 
-  it ('Should call loadById LoadSurveyByIdRepository method with correct values if LoadSurveyResultRepository returns null', async ()  => {
+  it ('Should call loadById LoadSurveyByIdRepository method with correct values if LoadSurveyResultBySurveyIdRepository returns null', async ()  => {
     const {sut, loadSurveyResultBySurveyIdRepositoryStub, loadSurveyByIdRepositoryStub } = makeSut();
     jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult').mockReturnValueOnce(null);
     const spyloadById = jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById');
@@ -70,4 +75,21 @@ describe('DbLoadSurveyResult Usecase', () => {
     expect(spyloadById).toHaveBeenCalledWith('any-survey-id');
   });
 
+  it ('Should throws if loadResult LoadSurveyResultBySurveyIdRepository method throws', async ()  => {
+    const {sut, loadSurveyResultBySurveyIdRepositoryStub } = makeSut();
+    jest.spyOn(loadSurveyResultBySurveyIdRepositoryStub, 'loadResult').mockImplementationOnce(()=> {
+      throw new Error();
+    });
+    const promise = sut.load('any-survey-id', 'any-account-id');
+    await expect(promise).rejects.toThrow();
+  });
+
+  // it ('Should throws if loadById LoadSurveyByIdRepository method if throws', async ()  => {
+  //   const {sut, loadSurveyByIdRepositoryStub } = makeSut();
+  //   jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockImplementationOnce(()=> {
+  //     throw new Error();
+  //   });
+  //   const promise = await sut.load('any-survey-id', 'any-account-id');
+  //   expect(promise).toThrow();
+  // });
 });
