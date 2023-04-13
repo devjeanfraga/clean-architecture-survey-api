@@ -88,6 +88,15 @@ describe('Survey Result Routes', () => {
   });
 
   describe('GET /surveys/:surveyId/results', () => {
+    it('Should return 403 on load survey result without accessToken', async () => {
+      await global.testRequest
+        .get('/clean-api/surveys/any_id/results')
+        .send({
+          answer: 'any_answer'
+        })
+        .expect(403)
+    });
+
     it('Should return 200 if route on sucess', async () => {
       const accessToken = await mockAccessToken('any@mail.com');
 
