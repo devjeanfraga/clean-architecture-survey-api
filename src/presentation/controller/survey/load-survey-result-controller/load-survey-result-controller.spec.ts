@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import {forbidden, InvalidParamError, LoadSurveyById, serverError, SurveyModel, LoadSurveyResult, SurveyResultModel, HttpRequest} from './load-survey-result-controller-protocols';
+import {forbidden, InvalidParamError, LoadSurveyById, serverError, SurveyModel, LoadSurveyResult, SurveyResultModel, HttpRequest, ok} from './load-survey-result-controller-protocols';
 import {LoadSurveyResultController} from './load-survey-result-controller'
 
 const fakeHttpRequest: HttpRequest = {
@@ -7,6 +7,21 @@ const fakeHttpRequest: HttpRequest = {
   params: {
     surveyId: 'any-id'
   }
+};
+
+const fakeSurveyResult = {
+  surveyId: 'any-surveyId',
+  question: 'any-question', 
+  answers: [
+    {
+      answer: 'any-answer-1',
+      image: 'any-image-1',
+      count: 1,
+      percent: 100,
+      isCurrentAccountAnswer: false 
+    }
+  ],
+  date: faker.date.past()
 }
 
 const makeLoadSurveyById = (): LoadSurveyById => {
@@ -26,20 +41,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 const makeLoadSurveyResult = (): LoadSurveyResult => {
   class LoadSurveyResultStub implements LoadSurveyResult {
     async load(surveyId: string, accountId: string): Promise<SurveyResultModel> {
-      return Promise.resolve({
-        surveyId: 'any-surveyId',
-        question: 'any-question', 
-        answers: [
-          {
-            answer: 'any-answer-1',
-            image: 'any-image-1',
-            count: 1,
-            percent: 100,
-            isCurrentAccountAnswer: false 
-          }
-        ],
-        date: faker.date.past()
-      }); 
+      return Promise.resolve(fakeSurveyResult); 
     }
   }
   return new LoadSurveyResultStub();
@@ -96,5 +98,11 @@ describe('LoadSurveyResultController', () => {
     jest.spyOn(loadSurveyResultStub, 'load').mockImplementationOnce(() => { throw new Error() });
     const promise = await sut.handle(fakeHttpRequest);
     expect(promise).toEqual(serverError(new Error()))
+  });
+
+  it('Should return 200 if LoadSurveyResult on success',  async () => {
+    const {sut} = makeSut();
+    const promise = await sut.handle(fakeHttpRequest);
+    expect(promise).toEqual(ok(fakeSurveyResult)); 
   });
 })
