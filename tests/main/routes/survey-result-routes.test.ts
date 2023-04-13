@@ -64,6 +64,15 @@ describe('Survey Result Routes', () => {
   });
 
   describe('PUT /surveys/:surveyId/results', () => {
+    it('Should return 403 on save survey result without accessToken', async () => {
+      await global.testRequest
+        .put('/clean-api/surveys/any_id/results')
+        .send({
+          answer: 'any_answer'
+        })
+        .expect(403)
+    })
+
     it('Should return status code 200 if on success', async () => {
       const accessToken = await mockAccessToken('any@mail.com');
 
