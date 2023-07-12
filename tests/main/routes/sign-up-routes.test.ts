@@ -1,5 +1,5 @@
 import { MongoHelper } from "../../../src/infra/db/mongodb/mongo-helpers";
-
+import { faker } from "@faker-js/faker";
 
 describe('POST /signup', () => { 
   beforeAll(async () => {
@@ -9,12 +9,13 @@ describe('POST /signup', () => {
   afterAll(async () => {
     await MongoHelper.disconnect(); 
   });
+
   it("should return an account", async () => {
     const response = await global.testRequest
       .post('/clean-api/signup')
       .send({
         name: 'any-name',
-        email: 'any@mail.com',
+        email: faker.internet.email(),
         password: 'any-password',
         confirmPassword: 'any-password'
       })
