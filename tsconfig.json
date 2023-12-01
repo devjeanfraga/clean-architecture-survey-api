@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "dist",
+    "rootDirs": ["src", "tests"],
     "module": "commonJS",
     "target": "ES2022",
     "esModuleInterop": true,
@@ -17,7 +18,9 @@
     "typeRoots": [
       "./node_modules/@types"
     ]
-  }
+  },
+  "files": ["global.d.ts"],
+  "include": ["src/**/*.ts"],
 }
 
 
