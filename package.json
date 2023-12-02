@@ -1,5 +1,5 @@
 {
-  "name": "clean-api",
+  "name": "survey-api",
   "version": "2.1.0",
   "main": "index.js",
   "author": "Jean Fraga <jeandevjs@gmail.com>",
@@ -27,9 +27,9 @@
     "@types/node": "^20.10.1",
     "@types/supertest": "^2.0.12",
     "@types/validator": "^13.7.12",
-    "@typescript-eslint/eslint-plugin": "^5.53.0",
-    "@typescript-eslint/parser": "^5.53.0",
-    "eslint": "7.17.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.2-alpha.7",
+    "@typescript-eslint/parser": "^6.13.2-alpha.7",
+    "eslint": "^8.34.0",
     "husky": "^8.0.3",
     "jest": "^29.4.3",
     "jest-environment-node": "29.x.x",
@@ -45,7 +45,7 @@
   },
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
-    "start": "yarn build && pm2 start dist/main/server.js --name survey-api",
+    "start": "yarn build && pm2 start dist/main/server.js --name survey-api --watch",
     "start:dev": "sucrase-node src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
