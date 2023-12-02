@@ -12,7 +12,7 @@ describe('POST /signup', () => {
 
   it("should return an account", async () => {
     const response = await global.testRequest
-      .post('/clean-api/signup')
+      .post('/survey-api/signup')
       .send({
         name: 'any-name',
         email: faker.internet.email(),

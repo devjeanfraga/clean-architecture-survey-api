@@ -66,7 +66,7 @@ describe('Survey Result Routes', () => {
   describe('PUT /surveys/:surveyId/results', () => {
     it('Should return 403 on save survey result without accessToken', async () => {
       await global.testRequest
-        .put('/clean-api/surveys/any_id/results')
+        .put('/survey-api/surveys/any_id/results')
         .send({
           answer: 'any_answer'
         })
@@ -77,10 +77,10 @@ describe('Survey Result Routes', () => {
       const accessToken = await mockAccessToken('any@mail.com');
 
       await surveysCollection.insertMany(fakeSurveys);
-      const { _id } = await surveysCollection.findOne({question: 'valid-question-2'}) 
+      const survey = await surveysCollection.findOne({question: 'valid-question-2'})
 
       const response = await global.testRequest
-        .put(`/clean-api/surveys/${_id.toString()}/results`)
+        .put(`/survey-api/surveys/${survey?._id.toString()}/results`)
         .set('x-access-token', accessToken)
         .send({answer: '02-valid-answer-03'});
         expect(response.statusCode).toBe(200)
@@ -90,7 +90,7 @@ describe('Survey Result Routes', () => {
   describe('GET /surveys/:surveyId/results', () => {
     it('Should return 403 on load survey result without accessToken', async () => {
       await global.testRequest
-        .get('/clean-api/surveys/any_id/results')
+        .get('/survey-api/surveys/any_id/results')
         .send({
           answer: 'any_answer'
         })
@@ -101,10 +101,10 @@ describe('Survey Result Routes', () => {
       const accessToken = await mockAccessToken('any@mail.com');
 
       await surveysCollection.insertMany(fakeSurveys);
-      const { _id } = await surveysCollection.findOne({question: 'valid-question-1'}) 
+      const survey = await surveysCollection.findOne({question: 'valid-question-1'}) 
       
       const response = await global.testRequest
-        .get(`/clean-api/surveys/${_id.toString()}/results`)
+        .get(`/survey-api/surveys/${survey?._id.toString()}/results`)
         .set('x-access-token', accessToken);
         expect(response.statusCode).toBe(200); 
     })

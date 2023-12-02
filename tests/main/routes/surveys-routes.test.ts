@@ -53,7 +53,7 @@ describe('POST-GET /surveys', () => {
     };
 
     const response = await global.testRequest
-      .post('/clean-api/surveys')
+      .post('/survey-api/surveys')
       .send(fakeSurvey);
     expect(response.statusCode).toBe(403)
   });
@@ -70,7 +70,7 @@ describe('POST-GET /surveys', () => {
     };
 
     const response = await global.testRequest
-      .post('/clean-api/surveys')
+      .post('/survey-api/surveys')
       .set('x-access-token', accessToken)
       .send(fakeSurvey);
     expect(response.statusCode).toBe(204)
@@ -106,7 +106,7 @@ describe('POST-GET /surveys', () => {
     ];
     await surveysCollection.insertMany(fakeSurveys); 
     const response = await global.testRequest
-      .get('/clean-api/surveys')
+      .get('/survey-api/surveys')
       .set('x-access-token', accessToken)
       expect(response.statusCode).toBe(200)
   });
